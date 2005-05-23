@@ -41,6 +41,7 @@ except:
     print "/usr/local/lib/python2.2/site-packages/"
     sys.exit(1)
 import os,finndStyles
+from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
 class appgui:
@@ -50,36 +51,39 @@ class appgui:
         
         gladefile="project3.glade"
         windowname="window1"
-        windowname2="window2"
-        
-
         self.wTree=gtk.glade.XML (gladefile,windowname)
-        #self.wTree2=gtk.glade.XML (gladefile,windowname2)
-        
         self.combobox1=self.wTree.get_widget("comboboxentry1")
         self.image1=self.wTree.get_widget("image1")
         self.fill_combolist(self.combobox1)
-        
         handler = {"on_button1_clicked":self.button1_clicked,
                    "on_button2_clicked":(gtk.main_quit),
+                   "on_button3_clicked":self.button3_clicked,
                    "on_comboboxentry1_changed":self.combobox1_changed,
                    "on_about1_activate":self.about1_activate,
                    "on_quit1_activate":(gtk.main_quit),
                    "on_window1_destroy":(gtk.main_quit)}
         
         self.wTree.signal_autoconnect (handler)
-        #self.wTree2.signal_autoconnect(handler)
         return
-    #Call backs begin here 
+    
+    # Call backs begin here 
+    # start with buttons
     def button1_clicked(self,widget):
         model = self.combobox1.get_model()
         index = self.combobox1.get_active()
         if index > -1:
             style = model[index][0]
             finndStyles.set_style(style)
+
+    def button3_clicked(self,widget):
+        print "button 3 was clicked."
+
+    def button4_clicked(self,widget):
+        print "button 4 clicked"
    
     def fill_combolist(self,widget):
-        dir = os.listdir(os.path.expanduser("~/.fluxbox/styles"))
+        dir = os.listdir(expanduser("~/.fluxbox/styles"))
+        dir.sort()
         self.combobox1=self.wTree.get_widget("comboboxentry1")
         liststore = gtk.ListStore(str)
         for styles in dir:
@@ -90,19 +94,15 @@ class appgui:
         model = self.combobox1.get_model()
         index = self.combobox1.get_active()
         if index > -1:
-            #print model[index][0], 'selected (from combobox1_changed)'
             self.image1=self.wTree.get_widget("image1")
-            if os.path.isfile(os.path.expanduser("~/.fluxbox/styles/"\
-                +model[index][0]+"/preview.jpg")):
-                self.image1.set_from_file(os.path.expanduser(\
-                      "~/.fluxbox/styles/"+model[index][0]+\
-                      "/preview.jpg"))
+            if isfile(expanduser("~/.fluxbox/styles/"+model[index][0]+"/preview.jpg")):
+                self.image1.set_from_file(expanduser("~/.fluxbox/styles/"\
+                    +model[index][0]+"/preview.jpg"))
             else:
                 self.image1.set_from_file("none.jpg")
         return
     
     def about1_activate(self,widget):
-        #print "gay"
         windowname2="window2"
         gladefile="project3.glade"
         self.wTree2=gtk.glade.XML (gladefile,windowname2)
