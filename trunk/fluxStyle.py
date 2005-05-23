@@ -50,8 +50,12 @@ class appgui:
         
         gladefile="project3.glade"
         windowname="window1"
+        windowname2="window2"
+        
 
         self.wTree=gtk.glade.XML (gladefile,windowname)
+        #self.wTree2=gtk.glade.XML (gladefile,windowname2)
+        
         self.combobox1=self.wTree.get_widget("comboboxentry1")
         self.image1=self.wTree.get_widget("image1")
         self.fill_combolist(self.combobox1)
@@ -59,9 +63,12 @@ class appgui:
         handler = {"on_button1_clicked":self.button1_clicked,
                    "on_button2_clicked":(gtk.main_quit),
                    "on_comboboxentry1_changed":self.combobox1_changed,
+                   "on_about1_activate":self.about1_activate,
+                   "on_quit1_activate":(gtk.main_quit),
                    "on_window1_destroy":(gtk.main_quit)}
         
         self.wTree.signal_autoconnect (handler)
+        #self.wTree2.signal_autoconnect(handler)
         return
     #Call backs begin here 
     def button1_clicked(self,widget):
@@ -93,7 +100,12 @@ class appgui:
             else:
                 self.image1.set_from_file("none.jpg")
         return
-      
+    
+    def about1_activate(self,widget):
+        #print "gay"
+        windowname2="window2"
+        gladefile="project3.glade"
+        self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
 app=appgui()
 gtk.main()   
