@@ -64,6 +64,7 @@ class StyleChange:
                    "on_button4_clicked":self.button4_clicked,
                    "on_comboboxentry1_changed":self.combobox1_changed,
                    "on_quit1_activate":(gtk.main_quit),
+                   "on_about1_activate":self.about1_activate,
                    "on_window1_destroy":(gtk.main_quit)}
         
         self.wTree.signal_autoconnect (handler)
@@ -98,6 +99,7 @@ class StyleChange:
         if response == gtk.RESPONSE_OK:
             findStyles.install_style(dialog.get_filename())
             self.fill_combolist(self)
+            dialog.destroy()
         if response == gtk.RESPONSE_CANCEL:
             #print 'Closed, no files selected'
             dialog.destroy()
@@ -106,14 +108,7 @@ class StyleChange:
     # remove style
     def button4_clicked(self,widget):
         print "button 4 clicked (remove style)"
-    
-    # button 5 cancle new or old install/removal
-    def button5_clicked(self,widget):
-        print "Cancle got pushed"
-
-    # button 6 open style for install
-    def button6_clicked(self,widget):
-        print "Open got pushed"
+        print "I know this doesnt work yet. Coming soon :)"
     
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
@@ -137,8 +132,8 @@ class StyleChange:
         return
     
     def about1_activate(self,widget):
-        windowname2="window2"
-        gladefile="project3.glade"
+        windowname2="aoubtdialog1"
+        gladefile="main.glade"
         self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
 app=StyleChange()

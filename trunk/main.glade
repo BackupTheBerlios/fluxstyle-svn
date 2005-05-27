@@ -18,6 +18,7 @@
   <property name="skip_pager_hint">False</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <property name="focus_on_map">True</property>
   <signal name="destroy" handler="on_window1_destroy" last_modification_time="Thu, 19 May 2005 16:44:20 GMT"/>
 
   <child>
@@ -48,7 +49,6 @@
 
 		      <child>
 			<widget class="GtkImageMenuItem" id="open1">
-			  <property name="visible">True</property>
 			  <property name="label">gtk-open</property>
 			  <property name="use_stock">True</property>
 			  <signal name="activate" handler="on_open1_activate" last_modification_time="Sat, 21 May 2005 19:58:32 GMT"/>
@@ -76,6 +76,7 @@
 
 		  <child>
 		    <widget class="GtkMenu" id="menu4">
+		      <property name="visible">True</property>
 
 		      <child>
 			<widget class="GtkMenuItem" id="about1">
@@ -135,6 +136,8 @@
 	  <property name="visible">True</property>
 	  <property name="items" translatable="yes"> 
 </property>
+	  <property name="add_tearoffs">False</property>
+	  <property name="focus_on_click">True</property>
 	  <signal name="changed" handler="on_comboboxentry1_changed" last_modification_time="Thu, 19 May 2005 22:01:28 GMT"/>
 	  <signal name="selection_get" handler="on_comboboxentry1_selection_get" last_modification_time="Thu, 19 May 2005 22:27:42 GMT"/>
 	</widget>
@@ -192,7 +195,6 @@
 
 	  <child>
 	    <widget class="GtkButton" id="button4">
-	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-remove</property>
@@ -211,6 +213,41 @@
       </child>
     </widget>
   </child>
+</widget>
+
+<widget class="GtkAboutDialog" id="aboutdialog1">
+  <property name="visible">True</property>
+  <property name="destroy_with_parent">False</property>
+  <property name="name" translatable="yes">fluxStyle</property>
+  <property name="copyright" translatable="yes">2005</property>
+  <property name="comments" translatable="yes">To use place a file named:
+preview.jpg 
+into each one of the style 
+folders located in ~/.fluxbox/styles. 
+For example in this style: ~/.fluxbox/styles/Acid
+***********************************************
+ls -l  ~/.fluxbox/styles/ACiD
+
+drwxr-xr-x  2 errr users  4096 May 22 12:55 pixmaps
+-rw-r--r--  1 errr users 18343 May 22 12:32 preview.jpg
+-rw-r--r--  1 errr users  6766 May 22 12:32 theme.cfg
+***********************************************
+Hit 'apply' to change the style
+and 'add' to install a new style</property>
+  <property name="license" translatable="yes">GNU GPL version2</property>
+  <property name="website">http://errr-online.com/</property>
+  <property name="website_label" translatable="yes">errr-online</property>
+  <property name="authors">Michael Rice 
+email: errr@errr-online.com</property>
+  <property name="documenters">Michael Rice
+email: errr@errr-online.com</property>
+  <property name="artists">artwork of fluxbox button done by
+and © 2005 by m.gumz aka akira
+@ http://darkshed.net/ 
+his work was licensed under the
+creative commons license. </property>
+  <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
+  <property name="logo">mini-fluxbox5.png</property>
 </widget>
 
 </glade-interface>
