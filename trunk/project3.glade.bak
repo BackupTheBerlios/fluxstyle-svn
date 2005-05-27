@@ -176,6 +176,32 @@
 	      <signal name="clicked" handler="on_button2_clicked" last_modification_time="Thu, 19 May 2005 16:50:38 GMT"/>
 	    </widget>
 	  </child>
+
+	  <child>
+	    <widget class="GtkButton" id="button3">
+	      <property name="visible">True</property>
+	      <property name="can_default">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label">gtk-add</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="on_button3_clicked" last_modification_time="Mon, 23 May 2005 22:38:15 GMT"/>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkButton" id="button4">
+	      <property name="visible">True</property>
+	      <property name="can_default">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="label">gtk-remove</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="on_button4_clicked" last_modification_time="Mon, 23 May 2005 22:38:23 GMT"/>
+	    </widget>
+	  </child>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
@@ -183,55 +209,6 @@
 	  <property name="fill">True</property>
 	</packing>
       </child>
-    </widget>
-  </child>
-</widget>
-
-<widget class="GtkWindow" id="window2">
-  <property name="visible">True</property>
-  <property name="title" translatable="yes">About</property>
-  <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
-  <property name="modal">False</property>
-  <property name="resizable">True</property>
-  <property name="destroy_with_parent">False</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
-
-  <child>
-    <widget class="GtkTextView" id="textview1">
-      <property name="visible">True</property>
-      <property name="can_focus">True</property>
-      <property name="editable">False</property>
-      <property name="overwrite">False</property>
-      <property name="accepts_tab">True</property>
-      <property name="justification">GTK_JUSTIFY_LEFT</property>
-      <property name="wrap_mode">GTK_WRAP_CHAR</property>
-      <property name="cursor_visible">True</property>
-      <property name="pixels_above_lines">0</property>
-      <property name="pixels_below_lines">0</property>
-      <property name="pixels_inside_wrap">0</property>
-      <property name="left_margin">0</property>
-      <property name="right_margin">0</property>
-      <property name="indent">0</property>
-      <property name="text" translatable="yes">This app was created by Michael Rice 
-email: errr@errr-online.com
-website: http://errr-online.com/
-
-To use place a file named: preview.jpg into each one of the style 
-folders located in ~/.fluxbox/styles. 
-For example in this style: ~/.fluxbox/styles/Acid
-***********************************************
-ls -l  ~/.fluxbox/styles/ACiD
-
-drwxr-xr-x  2 errr users  4096 May 22 12:55 pixmaps
--rw-r--r--  1 errr users 18343 May 22 12:32 preview.jpg
--rw-r--r--  1 errr users  6766 May 22 12:32 theme.cfg
-***********************************************
-Hit apply to change the style</property>
     </widget>
   </child>
 </widget>

@@ -40,7 +40,7 @@ except:
     print "try: export PYTHONPATH=",
     print "/usr/local/lib/python2.2/site-packages/"
     sys.exit(1)
-import os,finndStyles
+import os,findStyles
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
@@ -51,13 +51,15 @@ class appgui:
         
         gladefile="project3.glade"
         windowname="window1"
+        self.filechooser1 = "filechooserdialog1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
         self.combobox1=self.wTree.get_widget("comboboxentry1")
-        self.image1=self.wTree.get_widget("image1")
         self.fill_combolist(self.combobox1)
         handler = {"on_button1_clicked":self.button1_clicked,
                    "on_button2_clicked":(gtk.main_quit),
                    "on_button3_clicked":self.button3_clicked,
+                   "on_button4_clicked":self.button4_clicked,
+                   "on_button5_clicked":self.button5_clicked,
                    "on_comboboxentry1_changed":self.combobox1_changed,
                    "on_about1_activate":self.about1_activate,
                    "on_quit1_activate":(gtk.main_quit),
@@ -73,14 +75,30 @@ class appgui:
         index = self.combobox1.get_active()
         if index > -1:
             style = model[index][0]
-            finndStyles.set_style(style)
-
+            findStyles.set_style(style)
+            
+    # Add style
     def button3_clicked(self,widget):
-        print "button 3 was clicked."
-
+        print "button 3 was clicked.(add new style)"
+        filechooser1 = "filechooserdialog1"
+        gladefile="project3.glade"
+        self.wTree2=gtk.glade.XML (gladefile,filechooser1)
+        filechooser1.set_current_folder(expanduser("~/"))
+        
+    
+    # remove style
     def button4_clicked(self,widget):
-        print "button 4 clicked"
-   
+        print "button 4 clicked (remove style)"
+    
+    # button 5 cancle new or old install/removal
+    def button5_clicked(self,widget):
+        print "Cancle got pushed"
+
+    # button 6 open style for install
+    def button6_clicked(self,widget):
+        print "Open got pushed"
+
+    
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
         dir.sort()
