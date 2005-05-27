@@ -25,6 +25,10 @@ try:
     import pygtk
     #tell pyGTK, if possible, that we want GTKv2
     pygtk.require("2.0")
+    if gtk.pygtk_version < (2,3,90):
+        print "PyGtk 2.3.90 or later required for this program"
+        raise SystemExit
+
 except:
     #Some distributions come with GTK2, but not pyGTK
 
@@ -36,7 +40,6 @@ except:
     import sys
     print "You need to install pyGTK or GTKv2, or libglade2",
     print "or set your PYTHONPATH correctly."
-
     print "try: export PYTHONPATH=",
     print "/usr/local/lib/python2.2/site-packages/"
     sys.exit(1)
@@ -44,7 +47,7 @@ import os,findStyles
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
-class appgui:
+class StyleChange:
     def __init__(self):
 
         """The main fluxStyle window will show"""
@@ -53,14 +56,13 @@ class appgui:
         windowname="window1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
         self.combobox1=self.wTree.get_widget("comboboxentry1")
+        self.image1=self.wTree.get_widget("image1")
         self.fill_combolist(self.combobox1)
         handler = {"on_button1_clicked":self.button1_clicked,
                    "on_button2_clicked":(gtk.main_quit),
                    "on_button3_clicked":self.button3_clicked,
                    "on_button4_clicked":self.button4_clicked,
-                   "on_button5_clicked":self.button5_clicked,
                    "on_comboboxentry1_changed":self.combobox1_changed,
-                   "on_about1_activate":self.about1_activate,
                    "on_quit1_activate":(gtk.main_quit),
                    "on_window1_destroy":(gtk.main_quit)}
         
@@ -78,13 +80,40 @@ class appgui:
             
     # Add style
     def button3_clicked(self,widget):
-        print "button 3 was clicked.(add new style)"
-        #this will spawn file chooser
+        dialog = gtk.FileChooserDialog("Choose file to install",
+                                        None,gtk.FILE_CHOOSER_ACTION_OPEN,
+                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                        gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
+
+        filter = gtk.FileFilter()
+        filter.set_name("Fluxbox Styles")
+        filter.add_mime_type("tar/gz")
+        filter.add_mime_type("tar/bz2")
+        filter.add_pattern("*.tar.gz")
+        filter.add_pattern("*.tar.bz2")
+        dialog.add_filter(filter)
+
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            findStyles.install_style(dialog.get_filename())
+            self.fill_combolist(self)
+        if response == gtk.RESPONSE_CANCEL:
+            #print 'Closed, no files selected'
+            dialog.destroy()
+
     
     # remove style
     def button4_clicked(self,widget):
         print "button 4 clicked (remove style)"
-        #this will spawn file chooser
+    
+    # button 5 cancle new or old install/removal
+    def button5_clicked(self,widget):
+        print "Cancle got pushed"
+
+    # button 6 open style for install
+    def button6_clicked(self,widget):
+        print "Open got pushed"
     
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
@@ -112,5 +141,5 @@ class appgui:
         gladefile="project3.glade"
         self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
-app=appgui()
+app=StyleChange()
 gtk.main()   
