@@ -219,11 +219,9 @@
   <property name="visible">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">fluxStyle</property>
-  <property name="copyright" translatable="yes">2005</property>
-  <property name="comments" translatable="yes">To use place a file named:
-preview.jpg 
-into each one of the style 
-folders located in ~/.fluxbox/styles. 
+  <property name="copyright" translatable="yes">© 2005 by: Michael Rice</property>
+  <property name="comments" translatable="yes">To use place a file named 'preview.jpg' into each
+one of the style folders located in ~/.fluxbox/styles. 
 For example in this style: ~/.fluxbox/styles/Acid
 ***********************************************
 ls -l  ~/.fluxbox/styles/ACiD
@@ -243,11 +241,10 @@ email: errr@errr-online.com</property>
 email: errr@errr-online.com</property>
   <property name="artists">artwork of fluxbox button done by
 and © 2005 by m.gumz aka akira
-@ http://darkshed.net/ 
+url: http://darkshed.net/ 
 his work was licensed under the
 creative commons license. </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
-  <property name="logo">mini-fluxbox5.png</property>
 </widget>
 
 </glade-interface>

@@ -132,7 +132,10 @@ class StyleChange:
         return
     
     def about1_activate(self,widget):
-        windowname2="aoubtdialog1"
+        #GtkWidget *about
+        #about = create_gtemp_about()
+        #gtk_widget_show(about)
+        windowname2="aboutdialog1"
         gladefile="main.glade"
         self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
