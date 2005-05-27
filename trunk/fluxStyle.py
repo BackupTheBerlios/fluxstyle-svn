@@ -49,9 +49,8 @@ class appgui:
 
         """The main fluxStyle window will show"""
         
-        gladefile="project3.glade"
+        gladefile="main.glade"
         windowname="window1"
-        self.filechooser1 = "filechooserdialog1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
         self.combobox1=self.wTree.get_widget("comboboxentry1")
         self.fill_combolist(self.combobox1)
@@ -80,24 +79,12 @@ class appgui:
     # Add style
     def button3_clicked(self,widget):
         print "button 3 was clicked.(add new style)"
-        filechooser1 = "filechooserdialog1"
-        gladefile="project3.glade"
-        self.wTree2=gtk.glade.XML (gladefile,filechooser1)
-        filechooser1.set_current_folder(expanduser("~/"))
-        
+        #this will spawn file chooser
     
     # remove style
     def button4_clicked(self,widget):
         print "button 4 clicked (remove style)"
-    
-    # button 5 cancle new or old install/removal
-    def button5_clicked(self,widget):
-        print "Cancle got pushed"
-
-    # button 6 open style for install
-    def button6_clicked(self,widget):
-        print "Open got pushed"
-
+        #this will spawn file chooser
     
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
