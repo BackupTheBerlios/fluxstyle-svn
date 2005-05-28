@@ -13,6 +13,7 @@
   <property name="default_height">340</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">fluxbox48x48-trans-metal-bevel.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -245,6 +246,7 @@ url: http://darkshed.net/
 his work was licensed under the
 creative commons license. </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
+  <property name="logo">mini-fluxbox6.png</property>
 </widget>
 
 </glade-interface>
