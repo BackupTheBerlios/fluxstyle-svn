@@ -56,6 +56,7 @@ def install_style(file):
         #the file types in the file chooser to allow only tar.gz and tar.bz2
         return 2
     return
-  
+def remove_style(file):
+    print "ding!!"
 #install_style(raw_input("style file to install? "))
 

@@ -25,13 +25,8 @@ try:
     import pygtk
     #tell pyGTK, if possible, that we want GTKv2
     pygtk.require("2.0")
-    if gtk.pygtk_version < (2,3,90):
-        print "PyGtk 2.3.90 or later required for this program"
-        raise SystemExit
-
 except:
     #Some distributions come with GTK2, but not pyGTK
-
     pass
 try:
     import gtk
@@ -43,6 +38,11 @@ except:
     print "try: export PYTHONPATH=",
     print "/usr/local/lib/python2.2/site-packages/"
     sys.exit(1)
+if gtk.pygtk_version < (2,3,90):
+    print "PyGtk 2.3.90 or later required for this program\
+        it is reccomended that you get pygtk 2.6 or newer for best results."
+    raise SystemExit
+
 import os,findStyles
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
@@ -132,12 +132,15 @@ class StyleChange:
         return
     
     def about1_activate(self,widget):
-        #GtkWidget *about
-        #about = create_gtemp_about()
-        #gtk_widget_show(about)
-        windowname2="aboutdialog1"
         gladefile="main.glade"
-        self.wTree2=gtk.glade.XML (gladefile,windowname2)
+        try:
+            if gtk.pygtk_version < (2,5,90):
+                window3="dialog1"
+                self.wTree2=gtk.glade.XML(gladefile,window3)
+        except:
+            windowname2="aboutdialog1"
+            gladefile="main.glade"
+            self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
 app=StyleChange()
 gtk.main()   
