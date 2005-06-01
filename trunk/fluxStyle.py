@@ -131,16 +131,25 @@ class StyleChange:
                 self.image1.set_from_file("none.jpg")
         return
     
+    def close1_clicked(self,widget):
+        print "close this dialog"
+    
     def about1_activate(self,widget):
         gladefile="main.glade"
-        try:
-            if gtk.pygtk_version < (2,5,90):
-                window3="dialog1"
-                self.wTree2=gtk.glade.XML(gladefile,window3)
-        except:
+        if gtk.pygtk_version < (2,5,90):
+            window3="dialog1"
+            self.wTree2=gtk.glade.XML(gladefile,window3)
+            handler={"on_closebutton1_clicked":self.close1_clicked}
+            self.wTree.signal_autoconnect(handler)
+                
+        else:
             windowname2="aboutdialog1"
             gladefile="main.glade"
             self.wTree2=gtk.glade.XML (gladefile,windowname2)
+            #self.textview1 = self.wTree.get_widget("textview1")
+            #self.textview1.set_buffer("hello")
+            #self.textview1.set_editable(False)
+            #print "hello world"
 
 app=StyleChange()
 gtk.main()   
