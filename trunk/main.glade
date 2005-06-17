@@ -249,7 +249,7 @@ url: http://darkshed.net/
 his work was licensed under the
 creative commons license. </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
-  <property name="logo">mini-fluxbox6.png</property>
+  <property name="logo">/usr/local/fluxStyle/images/mini-fluxbox6.png</property>
 </widget>
 
 <widget class="GtkDialog" id="dialog1">
@@ -262,7 +262,7 @@ creative commons license. </property>
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">True</property>
-  <property name="icon">fluxbox48x48-trans-metal-bevel.png</property>
+  <property name="icon">/usr/local/fluxSyle/images/fluxbox48x48-trans-metal-bevel.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>

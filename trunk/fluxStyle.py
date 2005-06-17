@@ -52,7 +52,7 @@ class StyleChange:
 
         """The main fluxStyle window will show"""
         
-        gladefile="main.glade"
+        gladefile="/usr/local/fluxStyle/images/main.glade"
         windowname="window1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
         self.combobox1=self.wTree.get_widget("comboboxentry1")
@@ -107,7 +107,7 @@ class StyleChange:
     def button4_clicked(self,widget):
         model = self.combobox1.get_model()
         index = self.combobox1.get_active()
-        print "button 4 clicked (remove style) "+model[index][0]
+        #print "button 4 clicked (remove style) "+model[index][0]
         message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
             gtk.BUTTONS_NONE, "Are you sure you want to delete "+model[index][0]\
             +"?")
@@ -141,7 +141,7 @@ class StyleChange:
                 self.image1.set_from_file(expanduser("~/.fluxbox/styles/"\
                     +model[index][0]+"/preview.jpg"))
             else:
-                self.image1.set_from_file("none.jpg")
+                self.image1.set_from_file("/usr/local/fluxStyle/images/none.jpg")
         return
     
     def about1_activate(self,widget):
