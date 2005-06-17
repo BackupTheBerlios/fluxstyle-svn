@@ -43,7 +43,7 @@ if gtk.pygtk_version < (2,3,90):
         it is reccomended that you get pygtk 2.6 or newer for best results."
     raise SystemExit
 
-import os,findStyles
+import os,findStyles,re
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
@@ -72,6 +72,7 @@ class StyleChange:
     
     # Call backs begin here 
     # start with buttons
+    # Set style 
     def button1_clicked(self,widget):
         model = self.combobox1.get_model()
         index = self.combobox1.get_active()
@@ -86,7 +87,6 @@ class StyleChange:
                                         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
-
         filter = gtk.FileFilter()
         filter.set_name("Fluxbox Styles")
         filter.add_mime_type("tar/gz")
@@ -101,14 +101,26 @@ class StyleChange:
             self.fill_combolist(self)
             dialog.destroy()
         if response == gtk.RESPONSE_CANCEL:
-            #print 'Closed, no files selected'
             dialog.destroy()
-
     
     # remove style
     def button4_clicked(self,widget):
-        print "button 4 clicked (remove style)"
-        print "I know this doesnt work yet. Coming soon :)"
+        model = self.combobox1.get_model()
+        index = self.combobox1.get_active()
+        print "button 4 clicked (remove style) "+model[index][0]
+        message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+            gtk.BUTTONS_NONE, "Are you sure you want to delete "+model[index][0]\
+            +"?")
+        message.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+        message.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
+        response = message.run()
+        message.hide()
+        if response == gtk.RESPONSE_OK:
+            findStyles.remove_style(model[index][0])
+            message.destroy()
+            self.fill_combolist(self)
+        if response == gtk.RESPONSE_CLOSE:
+            message.destroy()
     
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
@@ -122,6 +134,7 @@ class StyleChange:
     def combobox1_changed(self,widget):
         model = self.combobox1.get_model()
         index = self.combobox1.get_active()
+        #pic = re.compile(r'\.(jpg|jpeg|png)$', re.IGNORECASE)
         if index > -1:
             self.image1=self.wTree.get_widget("image1")
             if isfile(expanduser("~/.fluxbox/styles/"+model[index][0]+"/preview.jpg")):
@@ -131,25 +144,21 @@ class StyleChange:
                 self.image1.set_from_file("none.jpg")
         return
     
-    def close1_clicked(self,widget):
-        print "close this dialog"
-    
     def about1_activate(self,widget):
         gladefile="main.glade"
-        if gtk.pygtk_version < (2,5,90):
-            window3="dialog1"
-            self.wTree2=gtk.glade.XML(gladefile,window3)
-            handler={"on_closebutton1_clicked":self.close1_clicked}
-            self.wTree.signal_autoconnect(handler)
-                
+        if gtk.pygtk_version > (2,5,90):
+            message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+                gtk.BUTTONS_NONE, \
+                "fluxStyle version 1.0\nUpdae your pygtk version\nfor more features."+\
+                " Version\n2.6.0 or newer is reccomended")
+            message.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+            response = message.run()
+            message.hide()
+            if response == gtk.RESPONSE_OK:
+                message.destroy()            
         else:
             windowname2="aboutdialog1"
-            gladefile="main.glade"
             self.wTree2=gtk.glade.XML (gladefile,windowname2)
-            #self.textview1 = self.wTree.get_widget("textview1")
-            #self.textview1.set_buffer("hello")
-            #self.textview1.set_editable(False)
-            #print "hello world"
 
 app=StyleChange()
 gtk.main()   
