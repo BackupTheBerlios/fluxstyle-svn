@@ -42,7 +42,8 @@ if gtk.pygtk_version < (2,3,90):
     print "PyGtk 2.3.90 or later required for this program\
         it is reccomended that you get pygtk 2.6 or newer for best results."
     raise SystemExit
-
+import sys
+sys.path.append("/usr/local/fluxStyle/mods")
 import os,findStyles,re
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
