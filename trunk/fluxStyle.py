@@ -145,8 +145,8 @@ class StyleChange:
         return
     
     def about1_activate(self,widget):
-        gladefile="main.glade"
-        if gtk.pygtk_version > (2,5,90):
+        gladefile="/usr/local/fluxStyle/images/main.glade"
+        if gtk.pygtk_version < (2,5,90):
             message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
                 gtk.BUTTONS_NONE, \
                 "fluxStyle version 1.0\nUpdae your pygtk version\nfor more features."+\
