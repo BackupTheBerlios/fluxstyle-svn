@@ -9,4 +9,6 @@ style makers are creating compliant styles. http://tenr.de/ is one, and the famo
 fluxbox-styles-fluxmod is another, I have the package with preview images up for
 download at: http://errr-online.com/fluxbox/ If you have any problems using this app
 please feel free to let me know how I can make it eaiser to use. email:
-errr(at)errr-online(dot)com or see me in IRC on irc.freenode.net in #fluxbox.
+errr(at)errr-online(dot)com or see me in IRC on irc.freenode.net in #fluxbox. Removal
+of this app is rather simple: as root: rm -rf /usr/local/fluxStyle
+/usr/local/bin/fluxStyle   and it will be gone.

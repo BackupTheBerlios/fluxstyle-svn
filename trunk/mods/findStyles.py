@@ -24,6 +24,9 @@ import os,re,shutil,sys,tarfile
 from os.path import expanduser
 
 def set_style(style):
+  
+    '''Select style and create entry in init file to reflect, then restart flux for change to take place'''
+    
     newStyleName = "session.styleFile:\t"+expanduser("~/.fluxbox/styles/"+style+"\n")
     oldStyleName = ""
     shutil.copyfile(expanduser("~/.fluxbox/init"),expanduser("~/.fluxbox/init.bckp"))
@@ -41,10 +44,15 @@ def set_style(style):
         output.write(s.replace(oldStyleName,newStyleName))
     output.close()
     input.close()
-    os.system('killall -s HUP fluxbox')
+    # attempt to not have to make a seperate fedora package for odd name
+    # 'fluxbox-bin'
+    os.system('killall -s HUP `xprop -root _BLACKBOX_PID | awk "{print $3}"`')
     return
 
 def install_style(file):
+    
+    '''Install a valid tar.gz or tar.bz2 style foo.tar.gz/foo.tar.bz2 we check to see if it was  packaged as styleFoo/ or as ~/.fluxbox/styles/styleFoo people package both ways'''
+    
     ins_dir = expanduser("~/.fluxbox/styles")
     if tarfile.is_tarfile(file) == True:
         # try first for bz2
@@ -79,6 +87,9 @@ def install_style(file):
         return 2
     return
 def remove_style(file):
+  
+    '''This can be used to remove a style'''
+    
     #print "I will del "
     shutil.rmtree(expanduser('~/.fluxbox/styles/')+file)
     #shutil.rmtree('/tmp/errr/styles_fluxmod/'+file)
