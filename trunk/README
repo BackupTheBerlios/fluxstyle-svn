@@ -11,4 +11,4 @@ download at: http://errr-online.com/fluxbox/ If you have any problems using this
 please feel free to let me know how I can make it eaiser to use. email:
 errr(at)errr-online(dot)com or see me in IRC on irc.freenode.net in #fluxbox. Removal
 of this app is rather simple: as root: rm -rf /usr/local/fluxStyle
-/usr/local/bin/fluxStyle   and it will be gone.
+/usr/local/bin/fluxStyle  and it will be gone.
