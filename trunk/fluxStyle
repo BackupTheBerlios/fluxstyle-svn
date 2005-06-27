@@ -53,34 +53,55 @@ class StyleChange:
 
         """The main fluxStyle window will show"""
         
-        gladefile="/usr/local/fluxStyle/images/main.glade"
+        #gladefile="/usr/local/fluxStyle/images/main.glade"
+        gladefile="./images/main.glade"
         windowname="window1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
-        self.combobox1=self.wTree.get_widget("comboboxentry1")
-        self.image1=self.wTree.get_widget("image1")
-        self.fill_combolist(self.combobox1)
+        self.combobox1=self.wTree.get_widget("treeview1")
+        #removed for treeview
+        #self.image1=self.wTree.get_widget("image1")
         handler = {"on_button1_clicked":self.button1_clicked,
                    "on_button2_clicked":(gtk.main_quit),
                    "on_button3_clicked":self.button3_clicked,
                    "on_button4_clicked":self.button4_clicked,
-                   "on_comboboxentry1_changed":self.combobox1_changed,
+                   #removed for treeview
+                   #"on_comboboxentry1_changed":self.combobox1_changed,
                    "on_quit1_activate":(gtk.main_quit),
                    "on_about1_activate":self.about1_activate,
                    "on_window1_destroy":(gtk.main_quit)}
         
         self.wTree.signal_autoconnect (handler)
+
+        #Preparing the treeview here
+        self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str)
+        self.combobox1.set_model(self.liststore)
+
+        renderer = gtk.CellRendererText()
+        imagerenderer = gtk.CellRendererPixbuf()
+        column1=gtk.TreeViewColumn("Preview", imagerenderer, pixbuf=0)
+        column1.set_resizable(True)
+        column2=gtk.TreeViewColumn("Name", renderer, text=1)
+        column2.set_resizable(True)
+        self.combobox1.append_column(column1)
+        self.combobox1.append_column(column2)
+
+        #Fill it (Clear + fill)
+        self.fill_combolist(self.combobox1)
+
         return
     
     # Call backs begin here 
     # start with buttons
     # Set style 
     def button1_clicked(self,widget):
-        model = self.combobox1.get_model()
-        index = self.combobox1.get_active()
-        if index > -1:
-            style = model[index][0]
+        #removed for treeview
+        #model = self.combobox1.get_model()
+        #index = self.combobox1.get_active()
+        #if index > -1:
+        style = self.get_selected_style()
+        if style:
             findStyles.set_style(style)
-            
+
     # Add style
     def button3_clicked(self,widget):
         dialog = gtk.FileChooserDialog("Choose file to install",
@@ -106,18 +127,19 @@ class StyleChange:
     
     # remove style
     def button4_clicked(self,widget):
-        model = self.combobox1.get_model()
-        index = self.combobox1.get_active()
+        #model = self.combobox1.get_model()
+        #index = self.combobox1.get_active()
         #print "button 4 clicked (remove style) "+model[index][0]
+        style = self.get_selected_style()
         message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
-            gtk.BUTTONS_NONE, "Are you sure you want to delete "+model[index][0]\
+            gtk.BUTTONS_NONE, "Are you sure you want to delete "+style\
             +"?")
         message.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
         message.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
         response = message.run()
         message.hide()
         if response == gtk.RESPONSE_OK:
-            findStyles.remove_style(model[index][0])
+            findStyles.remove_style(style)
             message.destroy()
             self.fill_combolist(self)
         if response == gtk.RESPONSE_CLOSE:
@@ -126,24 +148,44 @@ class StyleChange:
     def fill_combolist(self,widget):
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
         dir.sort()
-        self.combobox1=self.wTree.get_widget("comboboxentry1")
-        liststore = gtk.ListStore(str)
+        self.liststore.clear()
         for styles in dir:
-            liststore.append([styles])
-        self.combobox1.set_model(liststore)
-    
-    def combobox1_changed(self,widget):
-        model = self.combobox1.get_model()
-        index = self.combobox1.get_active()
-        #pic = re.compile(r'\.(jpg|jpeg|png)$', re.IGNORECASE)
-        if index > -1:
-            self.image1=self.wTree.get_widget("image1")
-            if isfile(expanduser("~/.fluxbox/styles/"+model[index][0]+"/preview.jpg")):
-                self.image1.set_from_file(expanduser("~/.fluxbox/styles/"\
-                    +model[index][0]+"/preview.jpg"))
-            else:
-                self.image1.set_from_file("/usr/local/fluxStyle/images/none.jpg")
-        return
+            self.liststore.append((self.get_preview(styles), styles,))
+
+
+    def get_preview(self, stylename):
+        if isfile(expanduser("~/.fluxbox/styles/"+stylename+"/preview.jpg")):
+            image = gtk.Image()
+            image.set_from_file(expanduser("~/.fluxbox/styles/"\
+                +stylename+"/preview.jpg"))
+            return image.get_pixbuf()
+        else:
+            image = gtk.Image()
+            image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
+            return image.get_pixbuf()
+
+    def get_selected_style(self):
+        selection = self.combobox1.get_selection()
+        (model, iter) = selection.get_selected()
+        if model and iter:
+            return model.get_value(iter, 1)
+        else:
+            return False
+
+
+# This is useless now    
+#    def combobox1_changed(self,widget):
+#        model = self.combobox1.get_model()
+#        index = self.combobox1.get_active()
+#        #pic = re.compile(r'\.(jpg|jpeg|png)$', re.IGNORECASE)
+#        if index > -1:
+#            self.image1=self.wTree.get_widget("image1")
+#            if isfile(expanduser("~/.fluxbox/styles/"+model[index][0]+"/preview.jpg")):
+#                self.image1.set_from_file(expanduser("~/.fluxbox/styles/"\
+#                    +model[index][0]+"/preview.jpg"))
+#            else:
+#                self.image1.set_from_file("/usr/local/fluxStyle/images/none.jpg")
+#        return
     
     def about1_activate(self,widget):
         gladefile="/usr/local/fluxStyle/images/main.glade"
