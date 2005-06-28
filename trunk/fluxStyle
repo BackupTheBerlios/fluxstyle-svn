@@ -79,6 +79,8 @@ class StyleChange:
 
         renderer = gtk.CellRendererText()
         imagerenderer = gtk.CellRendererPixbuf()
+        imagerenderer.set_property('ypad', 10)
+        imagerenderer.set_property('xpad', 5)
         column1=gtk.TreeViewColumn("Preview", imagerenderer, pixbuf=0)
         column1.set_resizable(True)
         column2=gtk.TreeViewColumn("Name", renderer, text=1)
