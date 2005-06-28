@@ -125,7 +125,11 @@ and 'add' to install a new style</property>
   <property name="website">http://errr-online.com/</property>
   <property name="website_label" translatable="yes">errr-online</property>
   <property name="authors">Michael Rice 
-email: errr@errr-online.com</property>
+email: errr@errr-online.com
+
+GUI Improvements &amp; Bug Stomping
+Zan a.k.a. Lauri Peltonen
+zan@mail.berlios.de</property>
   <property name="documenters">Michael Rice
 email: errr@errr-online.com</property>
   <property name="artists">fluxbox logo done by alzeakpa and released 
