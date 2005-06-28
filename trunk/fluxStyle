@@ -43,7 +43,8 @@ if gtk.pygtk_version < (2,3,90):
         it is reccomended that you get pygtk 2.6 or newer for best results."
     raise SystemExit
 import sys
-sys.path.append("/usr/local/fluxStyle/mods")
+#sys.path.append("/usr/local/fluxStyle/mods")
+sys.path.append("./mods")
 import os,findStyles,re
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
@@ -161,7 +162,8 @@ class StyleChange:
             return image.get_pixbuf()
         else:
             image = gtk.Image()
-            image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
+            #image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
+            image.set_from_file( "./images/none.jpg")
             return image.get_pixbuf()
 
     def get_selected_style(self):
@@ -188,7 +190,8 @@ class StyleChange:
 #        return
     
     def about1_activate(self,widget):
-        gladefile="/usr/local/fluxStyle/images/main.glade"
+        #gladefile="/usr/local/fluxStyle/images/main.glade"
+        gladefile="./images/main.glade"
         if gtk.pygtk_version < (2,5,90):
             message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
                 gtk.BUTTONS_NONE, \
