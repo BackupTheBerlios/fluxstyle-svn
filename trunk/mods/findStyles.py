@@ -54,7 +54,7 @@ def install_style(file):
     '''Install a valid tar.gz or tar.bz2 style foo.tar.gz/foo.tar.bz2 we check to see if it was  packaged as styleFoo/ or as ~/.fluxbox/styles/styleFoo people package both ways'''
     for i in file:
         #print i
-        ins_dir = expanduser("/tmp/errr/.fluxbox/styles")
+        ins_dir = expanduser("~/.fluxbox/styles")
         if tarfile.is_tarfile(i) == True:
             # try first for bz2
             #print "its a tar file"
@@ -68,9 +68,9 @@ def install_style(file):
                 except tarfile.ReadError:
                     #now return 2 to say weird file type..
                     return 2
-        #we need to find out how the style was packaged
-        #if it is ~/.fluxbox/styles/styleName then we need a new
-        #install dir. otherwise use default.
+            #we need to find out how the style was packaged
+            #if it is ~/.fluxbox/styles/styleName then we need a new
+            #install dir. otherwise use default.
             check = tar.getnames()
             x = re.compile('^\.fluxbox/styles/.+')
             if x.match(check[0]) == None:
