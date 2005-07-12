@@ -92,8 +92,8 @@ def remove_style(file):
     '''This can be used to remove a style'''
     
     #print "I will del "
-    for i in file:
-        shutil.rmtree(expanduser('~/.fluxbox/styles/')+i)
+    #for i in file:
+    shutil.rmtree(expanduser('~/.fluxbox/styles/')+file)
     #shutil.rmtree('/tmp/errr/styles_fluxmod/'+file)
 #install_style(raw_input("style file to install? "))
 
