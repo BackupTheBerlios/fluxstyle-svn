@@ -52,46 +52,48 @@ def set_style(style):
 def install_style(file):
     
     '''Install a valid tar.gz or tar.bz2 style foo.tar.gz/foo.tar.bz2 we check to see if it was  packaged as styleFoo/ or as ~/.fluxbox/styles/styleFoo people package both ways'''
-    
-    ins_dir = expanduser("~/.fluxbox/styles")
-    if tarfile.is_tarfile(file) == True:
-        # try first for bz2
-        #print "its a tar file"
-        try:
-          tar = tarfile.open(file, "r:bz2")
-        #maybe its tar.gz
-        except tarfile.ReadError:
+    for i in file:
+        #print i
+        ins_dir = expanduser("/tmp/errr/.fluxbox/styles")
+        if tarfile.is_tarfile(i) == True:
+            # try first for bz2
+            #print "its a tar file"
             try:
-              tar = tarfile.open(file, "r:gz")
-            #this isnt a bz2 or gz, so wtf is it?
+                tar = tarfile.open(i, "r:bz2")
+                #maybe its tar.gz
             except tarfile.ReadError:
-                #now return 2 to say weird file type..
-                return 2
+                try:
+                    tar = tarfile.open(i, "r:gz")
+                    #this isnt a bz2 or gz, so wtf is it?
+                except tarfile.ReadError:
+                    #now return 2 to say weird file type..
+                    return 2
         #we need to find out how the style was packaged
         #if it is ~/.fluxbox/styles/styleName then we need a new
         #install dir. otherwise use default.
-        check = tar.getnames()
-        x = re.compile('^\.fluxbox/styles/.+')
-        if x.match(check[0]) == None:
-            for i in tar:
-                tar.extract(i,ins_dir)
-                #print i, ins_dir
-        else:
-            ins_dir = expanduser("~/")
-            for i in tar:
-                tar.extract(i,ins_dir)
+            check = tar.getnames()
+            x = re.compile('^\.fluxbox/styles/.+')
+            if x.match(check[0]) == None:
+                for i in tar:
+                    tar.extract(i,ins_dir)
+                    #print i, ins_dir
+            else:
+                ins_dir = expanduser("~/")
+                for i in tar:
+                    tar.extract(i,ins_dir)
             
-    else:
-        # 2 == it wasnt even a tar file at all. This is a double check, we filter 
-        #the file types in the file chooser to allow only tar.gz and tar.bz2
-        return 2
+        else:
+            # 2 == it wasnt even a tar file at all. This is a double check, we filter 
+            #the file types in the file chooser to allow only tar.gz and tar.bz2
+            return 2
     return
 def remove_style(file):
   
     '''This can be used to remove a style'''
     
     #print "I will del "
-    shutil.rmtree(expanduser('~/.fluxbox/styles/')+file)
+    for i in file:
+        shutil.rmtree(expanduser('~/.fluxbox/styles/')+i)
     #shutil.rmtree('/tmp/errr/styles_fluxmod/'+file)
 #install_style(raw_input("style file to install? "))
 
