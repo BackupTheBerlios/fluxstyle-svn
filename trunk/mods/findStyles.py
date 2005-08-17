@@ -46,7 +46,7 @@ def set_style(style):
     input.close()
     # attempt to not have to make a seperate fedora package for odd name
     # 'fluxbox-bin'
-    os.system('kill -s HUP `xprop -root _BLACKBOX_PID | awk "{print $3}"`')
+    os.system('kill -s HUP `xprop -root _BLACKBOX_PID | awk \'{print $3}\'`')
     return
 
 def install_style(file):

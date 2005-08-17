@@ -3,10 +3,21 @@
 # if so send it to me errr@errr-online.com
 INSDIR="/usr/local/fluxStyle"
 BINDIR="/usr/local/bin"
+WHO="`whoami`"
+
+if [ ! -w $BINDIR ]; then
+  echo "You dont have access to write to $BINDIR"
+fi
+
+if [ $WHO != "root" ]; then
+  echo "You must be root to run this"
+  exit
+fi
 
 if [ ! -d $INSDIR ]; then 
   mkdir -p $INSDIR
 fi
+
 if [ ! -d $BINDIR ]; then
   mkdir -p $BINDIR
 fi
