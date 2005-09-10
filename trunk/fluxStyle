@@ -118,6 +118,7 @@ class StyleChange:
         filter.add_mime_type("tar/bz2")
         filter.add_pattern("*.tar.gz")
         filter.add_pattern("*.tar.bz2")
+        filter.add_patterm("*.tgz")
         dialog.add_filter(filter)
         dialog.set_select_multiple(True)
 
