@@ -61,10 +61,10 @@ class StyleChange:
         self.combobox1=self.wTree.get_widget("treeview1")
         #removed for treeview
         #self.image1=self.wTree.get_widget("image1")
-        handler = {"on_button1_clicked":self.button1_clicked,
-                   "on_button2_clicked":(gtk.main_quit),
-                   "on_button3_clicked":self.button3_clicked,
-                   "on_button4_clicked":self.button4_clicked,
+        handler = {"on_apply_style_clicked":self.apply_style_clicked,
+                   "on_quit_clicked":(gtk.main_quit),
+                   "on_add_style_clicked":self.add_style_clicked,
+                   "on_remove_style_clicked":self.remove_style_clicked,
                    #removed for treeview
                    #"on_comboboxentry1_changed":self.combobox1_changed,
                    "on_quit1_activate":(gtk.main_quit),
@@ -96,7 +96,7 @@ class StyleChange:
     # Call backs begin here 
     # start with buttons
     # Set style 
-    def button1_clicked(self,widget):
+    def apply_style_clicked(self,widget):
         #removed for treeview
         #model = self.combobox1.get_model()
         #index = self.combobox1.get_active()
@@ -106,7 +106,7 @@ class StyleChange:
             findStyles.set_style(style)
 
     # Add style
-    def button3_clicked(self,widget):
+    def add_style_clicked(self,widget):
         dialog = gtk.FileChooserDialog("Choose file to install",
                                         None,gtk.FILE_CHOOSER_ACTION_OPEN,
                                         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
@@ -118,7 +118,7 @@ class StyleChange:
         filter.add_mime_type("tar/bz2")
         filter.add_pattern("*.tar.gz")
         filter.add_pattern("*.tar.bz2")
-        filter.add_patterm("*.tgz")
+        filter.add_pattern("*.tgz")
         dialog.add_filter(filter)
         dialog.set_select_multiple(True)
 
@@ -131,7 +131,7 @@ class StyleChange:
             dialog.destroy()
     
     # remove style
-    def button4_clicked(self,widget):
+    def remove_style_clicked(self,widget):
         style = self.get_selected_style()
         message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
             gtk.BUTTONS_NONE, "Are you sure you want to delete "+style\
