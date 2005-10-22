@@ -23,7 +23,7 @@
 import tarfile,re
 from os.path import expanduser
 from os import system
-from shutil import rmtree
+from shutil import rmtree,copyfile
 from sys import stdout
 
 def set_style(style):
@@ -32,7 +32,7 @@ def set_style(style):
     
     newStyleName = "session.styleFile:\t"+expanduser("~/.fluxbox/styles/"+style+"\n")
     oldStyleName = ""
-    shutil.copyfile(expanduser("~/.fluxbox/init"),expanduser("~/.fluxbox/init.bckp"))
+    copyfile(expanduser("~/.fluxbox/init"),expanduser("~/.fluxbox/init.bckp"))
     cFile = open(expanduser("~/.fluxbox/init.bckp"),"r")
     text = cFile.readlines()
     cFile.close()
