@@ -206,19 +206,34 @@ class StyleChange:
             m.destroy()
 
     def __fill_combolist__(self,widget):
-        """Fill the combo list with styles"""
-        dir = os.listdir(expanduser("~/.fluxbox/styles"))
-        dir.sort()
-        self.liststore.clear()
-        for styles in dir:
-            self.liststore.append((self.__get_preview__(styles), styles,))
+        """Fill the combo list with styles test to see if there is a ~/.fluxbox/styles
+        if there isnt then make it and move on instead of die."""
+        try:
+            dir = os.listdir(expanduser("~/.fluxbox/styles"))
+            dir.sort()
+            self.liststore.clear()
+            for styles in dir:
+                self.liststore.append((self.__get_preview__(styles), styles,))
+        except(OSError):
+            dir = expanduser("~/.fluxbox/styles")
+            os.mkdir(dir)
+            message = """You do not have a default\nstyle folder yet \
+I have\nmade it for you. The list will\nremain empty until you \ninstall a \
+style which you can\ndo by clicking the add button."""
+            m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+                gtk.BUTTONS_NONE, message)
+            m.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+            response = m.run()
+            m.hide()
+            if response == gtk.RESPONSE_CLOSE:
+                m.destroy()
 
     def __get_preview__(self, stylename):
         """Get the preview image from  ~/.fluxbox/styles/styleName/preview.jpg"""
         if isfile(expanduser("~/.fluxbox/styles/"+stylename+"/preview.jpg")):
             image = gtk.Image()
             image.set_from_file(expanduser("~/.fluxbox/styles/"\
-                +stylename+"/preview.jpg"))
+              +stylename+"/preview.jpg"))
             return image.get_pixbuf()
         else:
             image = gtk.Image()

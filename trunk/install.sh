@@ -4,10 +4,15 @@
 # thanks
 
 if [ $1 !="install" ]; then
-  echo "Currently this is setup to be run from local dir, there is
+  echo "
+
+Currently this is setup to be run from local dir, there is
 no need to install this. Simply: chmod +x fluxStyle  and then
 run this from the directory you downloaded it with the following
-command: ./fluxStyle "
+command: ./fluxStyle 
+
+If you want to install it then run as root using 
+"
   exit
 fi
 
