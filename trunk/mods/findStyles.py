@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2005 Michael Rice
 # errr@errr-online.com
 #
@@ -19,9 +18,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
+"""Module to install remove and set styles for fluxbox"""
 
-import os,re,shutil,sys,tarfile
+import tarfile,re
 from os.path import expanduser
+from os import system
+from shutil import rmtree
+from sys import stdout
 
 def set_style(style):
   
@@ -38,7 +41,7 @@ def set_style(style):
     for x in text:
         if styleLine.search(x):
             oldStyleName = x 
-    output = sys.stdout
+    output = stdout
     output =  open(expanduser("~/.fluxbox/init"),"w")
     for s in input.readlines():
         output.write(s.replace(oldStyleName,newStyleName))
@@ -46,7 +49,7 @@ def set_style(style):
     input.close()
     # attempt to not have to make a seperate fedora package for odd name
     # 'fluxbox-bin'
-    os.system('kill -s HUP `xprop -root _BLACKBOX_PID | awk \'{print $3}\'`')
+    system('kill -s USR2 `xprop -root _BLACKBOX_PID | awk \'{print $3}\'`')
     return
 
 def install_style(file):
@@ -67,7 +70,7 @@ def install_style(file):
                     #this isnt a bz2 or gz, so wtf is it?
                 except tarfile.ReadError:
                     #now return 2 to say weird file type..
-                    return 2
+                    return False
             #we need to find out how the style was packaged
             #if it is ~/.fluxbox/styles/styleName then we need a new
             #install dir. otherwise use default.
@@ -93,7 +96,7 @@ def remove_style(file):
     
     #print "I will del "
     #for i in file:
-    shutil.rmtree(expanduser('~/.fluxbox/styles/')+file)
+    rmtree(expanduser('~/.fluxbox/styles/')+file)
     #shutil.rmtree('/tmp/errr/styles_fluxmod/'+file)
 #install_style(raw_input("style file to install? "))
 

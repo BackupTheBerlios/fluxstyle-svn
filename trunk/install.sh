@@ -1,6 +1,8 @@
 #!/bin/bash
 # lame install script, can you make it better?
 # if so send it to me errr@errr-online.com
+# thanks
+
 INSDIR="/usr/local/fluxStyle"
 BINDIR="/usr/local/bin"
 WHO="`whoami`"

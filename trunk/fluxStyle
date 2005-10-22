@@ -1,55 +1,106 @@
 #!/usr/bin/env python
 # Copyright 2005 Michael Rice
 # errr@errr-online.com
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-# DEALINGS IN THE SOFTWARE.
 
+""" fluxStyle
 
-try:
-    import pygtk
-    #tell pyGTK, if possible, that we want GTKv2
-    pygtk.require("2.0")
-except:
-    #Some distributions come with GTK2, but not pyGTK
-    pass
+fluxStyle is a graphical style-manager for the fluxbox
+window manager. Orignal version written by Michael Rice.
+Many special thanks to Zan a.k.a. Lauri Peltonen for his
+GUI Improvements & Bug Stomping. 
+
+Released under GPL v2.
+
+TODO 
+- add XML support or installing styles to some other location to 
+- be used as a default instead of the standard ~/.fluxbox/styles
+- somehow support older styles and not put folders in the list 
+- fix any bugs that may still be there and unseen..
+
+"""
 try:
     import gtk
+
+except:
+    #gtk is missing but tkinter is part of standard 
+    #python modules so give an error using it about what 
+    #the user is missing.
+    from Tkinter import *
+    # set up the window itself
+    top = Tk()
+    message = Frame(top)
+    message.master.title("fluxStlye Error")
+    message.pack()
+    error = """You do not have pyGTK installed\n\
+please vist http://pygtk.org/ and install\nat least 2.4, \
+and for best results get 2.6 or newer."""
+    # add the widgets
+    lMessage = Label(message, text = error)
+    lMessage.pack()
+    qButton = Button(message, text = "OK", command = message.quit)
+    qButton.pack()
+    # set the loop running
+    top.mainloop()
+    
+    #print "missing gtk bindings for python"
+    raise SystemExit
+
+try:
     import gtk.glade
+
 except:
     import sys
-    print "You need to install pyGTK or GTKv2, or libglade2",
-    print "or set your PYTHONPATH correctly."
-    print "try: export PYTHONPATH=",
-    print "/usr/local/lib/python2.2/site-packages/"
-    sys.exit(1)
-if gtk.pygtk_version < (2,3,90):
-    print "PyGtk 2.3.90 or later required for this program\
-        it is reccomended that you get pygtk 2.6 or newer for best results."
+    #we have gtk so give a gui message as to why this app will not work.
+    #maybe we need to offer to open the browser to
+    #http://ftp.gnome.org/pub/GNOME/sources/libglade/2.0/ 
+    ver = sys.version[:5]
+    message = """
+You need to install libglade2\n\
+http://ftp.gnome.org/pub/GNOME/sources/libglade/2.0/\n\
+or set your PYTHONPATH correctly.\n\
+try: export PYTHONPATH=/usr/local/lib/python%s/site-packages/\n\
+or export PYTHONPATH=/usr/lib/python%s/site-packages/""" % (ver,ver)
+    m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+          gtk.BUTTONS_NONE, message)
+    m.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
+    response = m.run()
+    m.hide()
+    if response == gtk.RESPONSE_CLOSE:
+        m.destroy()
+    
     raise SystemExit
+
+if gtk.pygtk_version < (2,3,90):
+    #we do have gtk so lets tell them via gui that they need to update pygtk
+    #maybe we should add a 'would you like to open a browser to pygtk.org ??
+    message = """PyGtk 2.3.90 or later required for this program\n\
+it is reccomended that you get pygtk 2.6 or newer\nfor best results."""
+
+    m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+          gtk.BUTTONS_NONE, message)
+    m.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
+    response = m.run()
+    m.hide()
+    if response == gtk.RESPONSE_CLOSE:
+        m.destroy()
+    raise SystemExit
+  
 import sys
 #sys.path.append("/usr/local/fluxStyle/mods")
 sys.path.append("./mods")
-import os,findStyles,re
+import os,findStyles
 from os.path import isfile,expanduser
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
 class StyleChange:
+    """
+    Class wrapper for changing styles in fluxbox:
+
+    usage:
+    """
+    def main(self):
+        gtk.main()
+    
     def __init__(self):
 
         """The main fluxStyle window will show"""
@@ -58,24 +109,20 @@ class StyleChange:
         gladefile="./images/main.glade"
         windowname="window1"
         self.wTree=gtk.glade.XML (gladefile,windowname)
-        self.combobox1=self.wTree.get_widget("treeview1")
-        #removed for treeview
-        #self.image1=self.wTree.get_widget("image1")
-        handler = {"on_apply_style_clicked":self.apply_style_clicked,
+        self.treeview1=self.wTree.get_widget("treeview1")
+        handler = {"on_apply_style_clicked":self.__apply_style_clicked__,
                    "on_quit_clicked":(gtk.main_quit),
-                   "on_add_style_clicked":self.add_style_clicked,
-                   "on_remove_style_clicked":self.remove_style_clicked,
-                   #removed for treeview
-                   #"on_comboboxentry1_changed":self.combobox1_changed,
+                   "on_add_style_clicked":self.__add_style_clicked__,
+                   "on_remove_style_clicked":self.__remove_style_clicked__,
                    "on_quit1_activate":(gtk.main_quit),
-                   "on_about1_activate":self.about1_activate,
+                   "on_about1_activate":self.__about1_activate__,
                    "on_window1_destroy":(gtk.main_quit)}
         
         self.wTree.signal_autoconnect (handler)
 
         #Preparing the treeview here
         self.liststore = gtk.ListStore(gtk.gdk.Pixbuf, str)
-        self.combobox1.set_model(self.liststore)
+        self.treeview1.set_model(self.liststore)
 
         renderer = gtk.CellRendererText()
         imagerenderer = gtk.CellRendererPixbuf()
@@ -85,28 +132,28 @@ class StyleChange:
         column1.set_resizable(True)
         column2=gtk.TreeViewColumn("Name", renderer, text=1)
         column2.set_resizable(True)
-        self.combobox1.append_column(column1)
-        self.combobox1.append_column(column2)
+        self.treeview1.append_column(column1)
+        self.treeview1.append_column(column2)
 
         #Fill it (Clear + fill)
-        self.fill_combolist(self.combobox1)
+        self.__fill_combolist__(self.treeview1)
 
         return
     
     # Call backs begin here 
     # start with buttons
     # Set style 
-    def apply_style_clicked(self,widget):
-        #removed for treeview
-        #model = self.combobox1.get_model()
-        #index = self.combobox1.get_active()
-        #if index > -1:
-        style = self.get_selected_style()
+    def __apply_style_clicked__(self,widget):
+        """Used to apply new styles"""
+        
+        style = self.__get_selected_style__()
         if style:
             findStyles.set_style(style)
 
     # Add style
-    def add_style_clicked(self,widget):
+    def __add_style_clicked__(self,widget):
+        """Install a new style, multiple styles can be installed at once."""
+        
         dialog = gtk.FileChooserDialog("Choose file to install",
                                         None,gtk.FILE_CHOOSER_ACTION_OPEN,
                                         (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
@@ -125,14 +172,17 @@ class StyleChange:
         response = dialog.run()
         if response == gtk.RESPONSE_OK:
             findStyles.install_style(dialog.get_filenames())
-            self.fill_combolist(self)
+            self.__fill_combolist__(self)
             dialog.destroy()
         if response == gtk.RESPONSE_CANCEL:
             dialog.destroy()
     
     # remove style
-    def remove_style_clicked(self,widget):
-        style = self.get_selected_style()
+    def __remove_style_clicked__(self,widget):
+      """Remove selected style, surrently only 1 style at a time is supported"""
+      
+      try:
+        style = self.__get_selected_style__()
         message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
             gtk.BUTTONS_NONE, "Are you sure you want to delete "+style\
             +"?")
@@ -143,19 +193,28 @@ class StyleChange:
         if response == gtk.RESPONSE_OK:
             findStyles.remove_style(style)
             message.destroy()
-            self.fill_combolist(self)
+            self.__fill_combolist__(self)
         if response == gtk.RESPONSE_CLOSE:
             message.destroy()
-    
-    def fill_combolist(self,widget):
+      except:
+        m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+              gtk.BUTTONS_NONE, "You must select a style to remove first")
+        m.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
+        response = m.run()
+        m.hide()
+        if response == gtk.RESPONSE_CLOSE:
+            m.destroy()
+
+    def __fill_combolist__(self,widget):
+        """Fill the combo list with styles"""
         dir = os.listdir(expanduser("~/.fluxbox/styles"))
         dir.sort()
         self.liststore.clear()
         for styles in dir:
-            self.liststore.append((self.get_preview(styles), styles,))
+            self.liststore.append((self.__get_preview__(styles), styles,))
 
-
-    def get_preview(self, stylename):
+    def __get_preview__(self, stylename):
+        """Get the preview image from  ~/.fluxbox/styles/styleName/preview.jpg"""
         if isfile(expanduser("~/.fluxbox/styles/"+stylename+"/preview.jpg")):
             image = gtk.Image()
             image.set_from_file(expanduser("~/.fluxbox/styles/"\
@@ -167,30 +226,17 @@ class StyleChange:
             image.set_from_file( "./images/none.jpg")
             return image.get_pixbuf()
 
-    def get_selected_style(self):
-        selection = self.combobox1.get_selection()
+    def __get_selected_style__(self):
+        """Getting the selected style"""
+        selection = self.treeview1.get_selection()
         (model, iter) = selection.get_selected()
         if model and iter:
             return model.get_value(iter, 1)
         else:
             return False
-
-
-# This is useless now    
-#    def combobox1_changed(self,widget):
-#        model = self.combobox1.get_model()
-#        index = self.combobox1.get_active()
-#        #pic = re.compile(r'\.(jpg|jpeg|png)$', re.IGNORECASE)
-#        if index > -1:
-#            self.image1=self.wTree.get_widget("image1")
-#            if isfile(expanduser("~/.fluxbox/styles/"+model[index][0]+"/preview.jpg")):
-#                self.image1.set_from_file(expanduser("~/.fluxbox/styles/"\
-#                    +model[index][0]+"/preview.jpg"))
-#            else:
-#                self.image1.set_from_file("/usr/local/fluxStyle/images/none.jpg")
-#        return
     
-    def about1_activate(self,widget):
+    def __about1_activate__(self,widget):
+        """Activate the help button with the about dialog, use generic if pygtk < 2.5.9"""
         #gladefile="/usr/local/fluxStyle/images/main.glade"
         gladefile="./images/main.glade"
         if gtk.pygtk_version < (2,5,90):
@@ -207,5 +253,6 @@ class StyleChange:
             windowname2="aboutdialog1"
             self.wTree2=gtk.glade.XML (gladefile,windowname2)
 
-app=StyleChange()
-gtk.main()   
+if __name__ == "__main__":
+    style = StyleChange()
+    style.main()   
