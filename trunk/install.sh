@@ -3,6 +3,14 @@
 # if so send it to me errr@errr-online.com
 # thanks
 
+if [ $1 !="install" ]; then
+  echo "Currently this is setup to be run from local dir, there is
+no need to install this. Simply: chmod +x fluxStyle  and then
+run this from the directory you downloaded it with the following
+command: ./fluxStyle "
+  exit
+fi
+
 INSDIR="/usr/local/fluxStyle"
 BINDIR="/usr/local/bin"
 WHO="`whoami`"
