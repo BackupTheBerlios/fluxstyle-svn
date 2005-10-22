@@ -6,17 +6,21 @@
 
 fluxStyle is a graphical style-manager for the fluxbox
 window manager. Orignal version written by Michael Rice.
-Many special thanks to Zan a.k.a. Lauri Peltonen for his
-GUI Improvements & Bug Stomping. 
+Many special thanks to Zan a.k.a. Lauri Peltonen for GUI 
+Improvements & Bug Stomping. 
 
 Released under GPL v2.
 
 TODO 
 - add XML support or installing styles to some other location to 
-- be used as a default instead of the standard ~/.fluxbox/styles
+  be used as a default instead of the standard ~/.fluxbox/styles
 - somehow support older styles and not put folders in the list 
+  like folders that dont have anything to do with a style.
 - fix any bugs that may still be there and unseen..
-
+- add tray icon support (this is started will be done soon)
+- convert install script to python. This will allow checking for
+  libs so it doesnt have to be done in the main app.
+  
 """
 try:
     import gtk
