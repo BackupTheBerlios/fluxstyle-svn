@@ -1,0 +1,11 @@
+(Format: Day.Month.Year)
+	Should have started this sooner cause I have nothing from
+	the start to Current :) 
+Starting 23.10.2005
+Changes for Revision 32
+	23.11.2005
+	*Added config file support file goes in ~/.fluxbox/fluxStyle.rc
+	*Added support for styles to be in any location in View menu on the 
+		menu bar Select the location. Default location is ~/.fluxbox/styles
+	*Added a filter to keep old styles out of the list
+

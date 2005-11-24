@@ -45,8 +45,6 @@ and for best results get 2.6 or newer."""
     qButton.pack()
     # set the loop running
     top.mainloop()
-    
-    #print "missing gtk bindings for python"
     raise SystemExit
 
 try:
@@ -92,35 +90,35 @@ it is reccomended that you get pygtk 2.6 or newer\nfor best results."""
 import sys
 #sys.path.append("/usr/local/fluxStyle/mods")
 sys.path.append("./mods")
-import os,findStyles
-from os.path import isfile,expanduser
+import os,findStyles,parseConfig
+from os.path import isfile,expanduser,isdir
 #now we have both gtk and gtk.glade imported
 #Also, we know we are running GTK v2
 class StyleChange:
-    """
-    Class wrapper for changing styles in fluxbox:
-
-    usage:
-    """
+    """Class wrapper for changing styles in fluxbox"""
+    location = ""
     def main(self):
         gtk.main()
     
     def __init__(self):
-
         """The main fluxStyle window will show"""
-        
+        global location
         #gladefile="/usr/local/fluxStyle/images/main.glade"
-        gladefile="./images/main.glade"
-        windowname="window1"
-        self.wTree=gtk.glade.XML (gladefile,windowname)
-        self.treeview1=self.wTree.get_widget("treeview1")
+        gladefile = "./images/main.glade"
+        windowname = "window1"
+        self.wTree = gtk.glade.XML (gladefile,windowname)
+        self.treeview1 = self.wTree.get_widget("treeview1")
+        self.view_menu = self.wTree.get_widget("view1_menu")
+        self.__fill_view_menu__(self.view_menu)
+        
         handler = {"on_apply_style_clicked":self.__apply_style_clicked__,
                    "on_quit_clicked":(gtk.main_quit),
                    "on_add_style_clicked":self.__add_style_clicked__,
                    "on_remove_style_clicked":self.__remove_style_clicked__,
                    "on_quit1_activate":(gtk.main_quit),
                    "on_about1_activate":self.__about1_activate__,
-                   "on_window1_destroy":(gtk.main_quit)}
+                   "on_window1_destroy":(gtk.main_quit),
+                   "on_default1_activate":self.__fill_combolist__}
         
         self.wTree.signal_autoconnect (handler)
 
@@ -132,27 +130,92 @@ class StyleChange:
         imagerenderer = gtk.CellRendererPixbuf()
         imagerenderer.set_property('ypad', 10)
         imagerenderer.set_property('xpad', 5)
-        column1=gtk.TreeViewColumn("Preview", imagerenderer, pixbuf=0)
+        column1 = gtk.TreeViewColumn("Preview", imagerenderer, pixbuf=0)
         column1.set_resizable(True)
-        column2=gtk.TreeViewColumn("Name", renderer, text=1)
+        column2 = gtk.TreeViewColumn("Name", renderer, text=1)
         column2.set_resizable(True)
         self.treeview1.append_column(column1)
         self.treeview1.append_column(column2)
 
         #Fill it (Clear + fill)
-        self.__fill_combolist__(self.treeview1)
-
+        self.__fill_combolist__(self.treeview1,loc="default")
         return
     
     # Call backs begin here 
-    # start with buttons
+    # fill combo list    
+    def __fill_combolist__(self,widget,loc="default"):
+        """Fill the combo list with styles test to see if there is a ~/.fluxbox/styles
+        if there isnt then make it and move on instead of die."""
+        global location
+        location = loc
+        if location == "default":
+            location = "~/.fluxbox/styles"
+            try:
+                dir = os.listdir(expanduser("~/.fluxbox/styles"))
+                dir.sort()
+                self.liststore.clear()
+                for styles in dir:
+                    if isdir(expanduser(location+"/"+styles)):
+                        self.liststore.append((self.__get_preview__(styles), styles,))
+            except(OSError):
+                dir = expanduser("~/.fluxbox/styles")
+                os.mkdir(dir)
+                message = """You do not have a default\nstyle folder yet \
+        I have\nmade it for you. The list will\nremain empty until you \ninstall a \
+        style which you can\ndo by clicking the add button."""
+                m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+                    gtk.BUTTONS_NONE, message)
+                m.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+                response = m.run()
+                m.hide()
+                if response == gtk.RESPONSE_CLOSE:
+                    m.destroy()
+        else:
+            dir = os.listdir(expanduser(location))
+            dir.sort()
+            self.liststore.clear()
+            for styles in dir:
+                if isdir(expanduser(location+"/"+styles)):
+                    self.liststore.append((self.__get_preview__(styles), styles,))
+    # get the preview image for view
+    def __get_preview__(self, stylename):
+        """Get the preview image from  ~/.fluxbox/styles/styleName/preview.jpg"""
+        global location
+        if os.path.isdir(expanduser(location) + "/" + stylename):
+            if isfile(expanduser(location+"/"+stylename+"/preview.jpg")):
+                image = gtk.Image()
+                image.set_from_file(expanduser(location+"/" +stylename+"/preview.jpg"))
+                return image.get_pixbuf()
+            else:
+                image = gtk.Image()
+                #image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
+                image.set_from_file( "./images/none.jpg")
+                return image.get_pixbuf()
+    def __fill_view_menu__(self, widget):
+        try:
+            ops = parseConfig.parse_file(expanduser("~/.fluxbox/fluxStyle.rc"))
+            count = 1
+            view = self.view_menu
+            for k,v in ops.iteritems():
+                if k == "STYLES_DIRS":
+                    for x in v:
+                        name = "_"+str(count)+" Extra Styles"
+                        menuitem = gtk.MenuItem(name + str(count))
+                        menuitem.connect("activate", self.__fill_combolist__,x)
+                        view.add(menuitem)
+                        count += 1
+            view.show_all()
+        except (UnboundLocalError):
+            pass
+            #TODO test more to see if this is the error we get everytime there is no config file, if so we need to create one then 
+            #pop up a dialog telling the user what the fuck to do. 
     # Set style 
     def __apply_style_clicked__(self,widget):
         """Used to apply new styles"""
-        
+        global location
         style = self.__get_selected_style__()
         if style:
-            findStyles.set_style(style)
+            findStyles.set_style(style,location)
 
     # Add style
     def __add_style_clicked__(self,widget):
@@ -183,68 +246,42 @@ class StyleChange:
     
     # remove style
     def __remove_style_clicked__(self,widget):
-      """Remove selected style, surrently only 1 style at a time is supported"""
-      
-      try:
-        style = self.__get_selected_style__()
-        message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
-            gtk.BUTTONS_NONE, "Are you sure you want to delete "+style\
-            +"?")
-        message.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
-        message.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
-        response = message.run()
-        message.hide()
-        if response == gtk.RESPONSE_OK:
-            findStyles.remove_style(style)
-            message.destroy()
-            self.__fill_combolist__(self)
-        if response == gtk.RESPONSE_CLOSE:
-            message.destroy()
-      except:
-        m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
-              gtk.BUTTONS_NONE, "You must select a style to remove first")
-        m.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
-        response = m.run()
-        m.hide()
-        if response == gtk.RESPONSE_CLOSE:
-            m.destroy()
-
-    def __fill_combolist__(self,widget):
-        """Fill the combo list with styles test to see if there is a ~/.fluxbox/styles
-        if there isnt then make it and move on instead of die."""
+        """Remove selected style, currently only 1 style at a time is supported"""
+        global location
         try:
-            dir = os.listdir(expanduser("~/.fluxbox/styles"))
-            dir.sort()
-            self.liststore.clear()
-            for styles in dir:
-                self.liststore.append((self.__get_preview__(styles), styles,))
+          style = self.__get_selected_style__()
+          message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+              gtk.BUTTONS_NONE, "Are you sure you want to delete "+style\
+              +"?")
+          message.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+          message.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CLOSE)
+          response = message.run()
+          message.hide()
+          #TODO
+          #Need to add a try statement here to make sure we will be able to delete the 
+          #selected style
+          if response == gtk.RESPONSE_OK:
+              if findStyles.remove_style(style,location) != False:
+                  message.destroy()
+                  self.__fill_combolist__(self,location)
+              else:
+                  say = """You do not have access to remove this style please contact your system admin for help removing this style."""
+                  message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_NONE, say)
+                  message.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+                  response = message.run()
+                  message.hide()
+                  if response == gtk.RESPONSE_CLOSE:
+                      message.destroy()
+          if response == gtk.RESPONSE_CLOSE:
+              message.destroy()
         except(OSError):
-            dir = expanduser("~/.fluxbox/styles")
-            os.mkdir(dir)
-            message = """You do not have a default\nstyle folder yet \
-I have\nmade it for you. The list will\nremain empty until you \ninstall a \
-style which you can\ndo by clicking the add button."""
-            m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
-                gtk.BUTTONS_NONE, message)
-            m.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
-            response = m.run()
-            m.hide()
-            if response == gtk.RESPONSE_CLOSE:
-                m.destroy()
-
-    def __get_preview__(self, stylename):
-        """Get the preview image from  ~/.fluxbox/styles/styleName/preview.jpg"""
-        if isfile(expanduser("~/.fluxbox/styles/"+stylename+"/preview.jpg")):
-            image = gtk.Image()
-            image.set_from_file(expanduser("~/.fluxbox/styles/"\
-              +stylename+"/preview.jpg"))
-            return image.get_pixbuf()
-        else:
-            image = gtk.Image()
-            #image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
-            image.set_from_file( "./images/none.jpg")
-            return image.get_pixbuf()
-
+          m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+                gtk.BUTTONS_NONE, "You must select a style to remove first")
+          m.add_button(gtk.STOCK_OK, gtk.RESPONSE_CLOSE)
+          response = m.run()
+          m.hide()
+          if response == gtk.RESPONSE_CLOSE:
+              m.destroy()
     def __get_selected_style__(self):
         """Getting the selected style"""
         selection = self.treeview1.get_selection()
@@ -271,7 +308,6 @@ style which you can\ndo by clicking the add button."""
         else:
             windowname2="aboutdialog1"
             self.wTree2=gtk.glade.XML (gladefile,windowname2)
-
 if __name__ == "__main__":
     style = StyleChange()
-    style.main()   
+    style.main()
