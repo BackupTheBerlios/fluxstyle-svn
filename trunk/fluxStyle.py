@@ -137,7 +137,7 @@ class StyleChange:
                 dir.sort()
                 self.liststore.clear()
                 for styles in dir:
-                    if isdir(location+"/"+styles):
+                    #if isdir(location+"/"+styles):
                         self.liststore.append((self.__get_preview__(styles), styles,))
             except(OSError):
                 dir = expanduser("~/.fluxbox/styles")
@@ -157,7 +157,7 @@ class StyleChange:
             dir.sort()
             self.liststore.clear()
             for styles in dir:
-                if isdir(location+"/"+styles):
+                #if isdir(location+"/"+styles):
                     self.liststore.append((self.__get_preview__(styles), styles,))
     # get the preview image for view
     def __get_preview__(self, stylename):
@@ -177,6 +177,7 @@ class StyleChange:
     def __fill_view_menu__(self, widget):
         #TODO check to see if ops == False if so then the config hasnt been edited yet
         #so all we have is our default style location.
+        v_menuNam = None
         if parseConfig.check4_config() == 2:
             message = """This looks like the first time you have started fluxStlye
 a default config has been created for you. You should edit this config to control the
@@ -193,9 +194,15 @@ to the "~/" aka $HOME directory. If you find this is not accurate information pl
                 count = 1
                 view = self.view_menu
                 for k,v in ops.iteritems():
+                    if k == "DISPLAY_NAME":
+                        if len(v) == 1:
+                            for x in v:
+                                v_menuNam = x
+                    if v_menuNam == None:
+                        v_menuNam = " Extra Styles"
                     if k == "STYLES_DIRS":
                         for x in v:
-                            name = "_"+str(count)+" Extra Styles"
+                            name = "_"+str(count)+" %s"%(v_menuNam)
                             menuitem = gtk.MenuItem(name + str(count))
                             menuitem.connect("activate", self.__fill_combolist__,x)
                             view.add(menuitem)
