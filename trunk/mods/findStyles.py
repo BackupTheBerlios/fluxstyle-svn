@@ -95,5 +95,3 @@ def remove_style(file,location):
         return True
     else:
         return False
-#install_style(raw_input("style file to install? "))
-

@@ -8,4 +8,8 @@ Changes for Revision 39
 	*Added support for styles to be in any location in View menu on the 
 		menu bar Select the location. Default location is ~/.fluxbox/styles
 	*Added a filter to keep old styles out of the list
-
+Changes for Revision 41
+  *Added function for errorMessages 
+		errorMessage.infoMessage(message) will return a gtk dialog with the message in it. good for "premission denied" etc
+  *cleaned up code some
+  *Added config file creator function													
