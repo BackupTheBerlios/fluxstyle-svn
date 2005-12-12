@@ -28,7 +28,9 @@ def write_config():
 # Default is ~/.fluxbox/styles only uncomment if you want to install somewhere else.
 # keep in mind if it is not your ~/ then you may need root rights to install
 # Not supported yet
-#INSTALL_DIR:"""
+#INSTALL_DIR:
+#Only 1 value will be read here, if you add more then it will fall back to the default
+#DISPLAY_NAME:"""
     file = expanduser("~/.fluxStyle.rc")
     file = open(file, "w")
     file.write(conFile)
