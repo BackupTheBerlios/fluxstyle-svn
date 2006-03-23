@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright 2005 Michael Rice
 # errr@errr-online.com
+# vim: noexpandtab:ts=4:sts=4
 
 """ fluxStyle
 

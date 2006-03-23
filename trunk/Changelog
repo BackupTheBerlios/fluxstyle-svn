@@ -9,7 +9,13 @@ Changes for Revision 39
 		menu bar Select the location. Default location is ~/.fluxbox/styles
 	*Added a filter to keep old styles out of the list
 Changes for Revision 41
+  12.12.2005
   *Added function for errorMessages 
 		errorMessage.infoMessage(message) will return a gtk dialog with the message in it. good for "premission denied" etc
   *cleaned up code some
   *Added config file creator function													
+Changes for Revision 44
+
+	
+	*Added support for name in the config to allow custom name tag in the view menu
+
