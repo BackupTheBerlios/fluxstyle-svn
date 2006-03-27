@@ -22,15 +22,14 @@ def check4_config():
         return 3
 
 def write_config():
-    conFile = """# No need to add ~/.fluxbox/styles it is the default location and if it is listed it will
-# be ignored. Currently the only option supported in revision 41 is STYLES_DIRS
-#STYLES_DIRS:/usr/local/share/fluxbox/styles:/usr/share/commonbox/styles
-# Default is ~/.fluxbox/styles only uncomment if you want to install somewhere else.
-# keep in mind if it is not your ~/ then you may need root rights to install
-# Not supported yet
-#INSTALL_DIR:
-# Only 1 value will be read here, if you add more then it will fall back to the default
-#DISPLAY_NAME:"""
+    conFile = """
+# No need to add ~/.fluxbox/styles it is the default location and if it is listed it will
+# be ignored. Currently the only option supported right now is STYLES_DIRS
+# to choose the name that will display in the view menu use the following syntax
+# Name,/location:Foo,/other/location:Bar,/another/location
+# If the name identifier is left off "Extra Styles" will be used.
+#STYLES_DIRS:Global,/usr/local/share/fluxbox/styles:Commonbox,/usr/share/commonbox/styles
+"""
     file = expanduser("~/.fluxStyle.rc")
     file = open(file, "w")
     file.write(conFile)
@@ -68,4 +67,15 @@ def parse_file(file):
     else:
         return False    
 if __name__ == "__main__":
-    print parse_file("~/programs/fluxStyle/fluxStyle")
+    #print parse_file("~/.fluxStyle.rc")
+    x = parse_file("~/.fluxStyle.rc")
+    l = []
+    for k,v in x.iteritems():
+      if k == "STYLES_DIRS":
+        for i in v:
+          l.append( i.strip().split(",") )
+        for i in l:
+          if len(i) <= 1:
+            print "default ", i[0]
+          else:
+            print i[0], i[1]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2005 Michael Rice
+# Copyright 2005,2006 Michael Rice
 # errr@errr-online.com
 # vim: noexpandtab:ts=4:sts=4
 
@@ -13,8 +13,6 @@ Improvements & Bug Stomping.
 Released under GPL v2.
 
 TODO 
-- add XML support or installing styles to some other location to 
-  be used as a default instead of the standard ~/.fluxbox/styles
 - somehow support older styles and not put folders in the list 
   like folders that dont have anything to do with a style.
 - fix any bugs that may still be there and unseen..
@@ -26,7 +24,7 @@ TODO
 import sys
 #sys.path.append("/usr/local/fluxStyle/mods")
 sys.path.append("./mods")
-import os,findStyles,parseConfig,errorMessage
+import os,findStyles,parseConfig
 from os.path import isfile,expanduser,isdir
 try:
     import gtk
@@ -53,6 +51,7 @@ and for best results get 2.6 or newer."""
     top.mainloop()
     raise SystemExit
 
+import errorMessage
 try:
     import gtk.glade
 
@@ -61,22 +60,21 @@ except:
     #maybe we need to offer to open the browser to
     #http://ftp.gnome.org/pub/GNOME/sources/libglade/2.0/ 
     ver = sys.version[:5]
-    message = """You need to install libglade2 
-http://ftp.gnome.org/pub/GNOME/sources/libglade/2.0/ 
-or set your PYTHONPATH correctly.
-try: export PYTHONPATH=/usr/local/lib/python%s/site-packages/
-or export PYTHONPATH=/usr/lib/python%s/site-packages/""" % (ver,ver)
+    message = "You need to install libglade2 http://ftp.gnome.org/pub/GNOME/sources"
+	message += "/libglade/2.0/ or set your PYTHONPATH correctly. try: export "
+	message += "PYTHONPATH=/usr/local/lib/python%s/site-packages/ or export " %(ver)
+	message += "PYTHONPATH=/usr/lib/python%s/site-packages/" % (ver)
     errorMessage.infoMessage(message)
     raise SystemExit
 
 if gtk.pygtk_version < (2,3,90):
     #we do have gtk so lets tell them via gui that they need to update pygtk
     #maybe we should add a 'would you like to open a browser to pygtk.org ??
-    message ="""PyGtk 2.3.90 or later required for this program 
-it is reccomended that you get pygtk 2.6 or newer for best results."""
+    message = "PyGtk 2.3.90 or later required for this program it is reccomended "
+	message += "that you get pygtk 2.6 or newer for best results."
     errorMessage.infoMessage(message)
     raise SystemExit
-  
+
 class StyleChange:
     """Class wrapper for changing styles in fluxbox"""
     location = ""
@@ -138,76 +136,76 @@ class StyleChange:
                 dir.sort()
                 self.liststore.clear()
                 for styles in dir:
-                    #if isdir(location+"/"+styles):
-                        self.liststore.append((self.__get_preview__(styles), styles,))
+				    self.liststore.append((self.__get_preview__(styles), styles,))
             except(OSError):
                 dir = expanduser("~/.fluxbox/styles")
                 os.makedirs(dir,mode=0700)
-                message = """You do not have a default\nstyle folder yet \
-        I have\nmade it for you. The list will\nremain empty until you \ninstall a \
-        style which you can\ndo by clicking the add button."""
-                m = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
-                    gtk.BUTTONS_NONE, message)
-                m.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
-                response = m.run()
-                m.hide()
-                if response == gtk.RESPONSE_CLOSE:
-                    m.destroy()
+                message = "You do not have a default style folder yet I have made it for you. "
+				message += "The list will remain empty until you install a style which "
+				message += "you can do by clicking the add button."
+		        errorMessage.infoMessage(message)
         else:
-            dir = os.listdir(location)
-            dir.sort()
-            self.liststore.clear()
-            for styles in dir:
-                #if isdir(location+"/"+styles):
-                    self.liststore.append((self.__get_preview__(styles), styles,))
+		    try:
+			    dir = os.listdir(location)
+				dir.sort()
+				self.liststore.clear()
+				for styles in dir:
+				    self.liststore.append((self.__get_preview__(styles), styles,))
+			except(OSError):
+			    m = "You have an invalid location in your ~/.fluxStyle.rc file. It is possible "
+				m += "that you have a syntax error. Please exit fluxStlye and fix the error in "
+				m += "this file and try again."
+				errorMessage.infoMessage(m)
     # get the preview image for view
     def __get_preview__(self, stylename):
-        """Get the preview image from  ~/.fluxbox/styles/styleName/preview.jpg"""
+	    """Get the preview image from: location + /styleName/preview.jpg"""
         global location
         location = expanduser(location)
+        image = gtk.Image()
         if os.path.isdir(location + "/" + stylename):
             if isfile(location+"/"+stylename+"/preview.jpg"):
-                image = gtk.Image()
                 image.set_from_file(location+"/" +stylename+"/preview.jpg")
-                return image.get_pixbuf()
             else:
-                image = gtk.Image()
                 #image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
                 image.set_from_file( "./images/none.jpg")
-                return image.get_pixbuf()
+        return image.get_pixbuf()
     def __fill_view_menu__(self, widget):
-        #TODO check to see if ops == False if so then the config hasnt been edited yet
-        #so all we have is our default style location.
         v_menuNam = None
         if parseConfig.check4_config() == 2:
-            message = """This looks like the first time you have started fluxStlye
-a default config has been created for you. You should edit this config to control the
-location of styles shown in the preview window. The config file is located in ~/.fluxStyle.rc"""
+            message = "This looks like the first time you have started fluxStlye "
+			message += "a default config has been created for you. You should edit "
+			message += "this config to control the location of styles shown in the "
+			message += "preview window. The config file is located in ~/.fluxStyle.rc"
             errorMessage.infoMessage(message)
         
         elif parseConfig.check4_config() == 3:
-            message = """You do not have the config file "~/.fluxStyle.rc" and you do not have write access
-to the "~/" aka $HOME directory. If you find this is not accurate information please report a bug to errr@errr-online.com"""
+            message = "You do not have the config file \"~/.fluxStyle.rc\" and you do "
+			message += "not have write access to the \"~/\" aka $HOME directory. If you "
+			message += "find this is not accurate information please report a bug to errr@"
+			message += "errr-online.com"
             errorMessage.infoMessage(message)
         elif parseConfig.check4_config() == True:
             ops = parseConfig.parse_file(expanduser("~/.fluxStyle.rc"))
+			l = []
             if ops != False:
                 count = 1
                 view = self.view_menu
                 for k,v in ops.iteritems():
-                    if k == "DISPLAY_NAME":
-                        if len(v) == 1:
-                            for x in v:
-                                v_menuNam = x
-                    if v_menuNam == None:
-                        v_menuNam = " Extra Styles"
                     if k == "STYLES_DIRS":
                         for x in v:
-                            name = "_"+str(count)+" %s"%(v_menuNam)
-                            menuitem = gtk.MenuItem(name + str(count))
-                            menuitem.connect("activate", self.__fill_combolist__,x)
-                            view.add(menuitem)
-                            count += 1
+						    l.append(x.strip().split(','))
+						for i in l:
+						    if len(i) <= 1:
+							    name = "_"+str(count)+" %s"%(" Extra Styles")
+								menuitem = gtk.MenuItem(name + str(count))
+								menuitem.connect("activate", self.__fill_combolist__,i[0])
+								view.add(menuitem)
+								count += 1
+							else:
+							    name = "_%s"%(i[0])
+								menuitem = gtk.MenuItem(name)
+								menuitem.connect("activate",self.__fill_combolist__,i[1])
+								view.add(menuitem)
                     view.show_all()            
     # Set style 
     def __apply_style_clicked__(self,widget):
@@ -250,7 +248,7 @@ to the "~/" aka $HOME directory. If you find this is not accurate information pl
         global location
         style = self.__get_selected_style__()
         if style == False:
-            m = """You must select a style to remove first"""
+            m = "You must select a style to remove first"
             errorMessage.infoMessage(m)            
         else:
             message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
@@ -264,8 +262,10 @@ to the "~/" aka $HOME directory. If you find this is not accurate information pl
                     message.destroy()
                     self.__fill_combolist__(self,location)
                 else:
-                    say = """You do not have access to remove this style please contact your system admin for help removing this style."""
-                    message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_NONE, say)
+                    say = "You do not have access to remove this style please contact "
+					say += "your system admin for help removing this style."
+                    message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, \
+						gtk.BUTTONS_NONE, say)
                     message.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
                     response = message.run()
                     message.hide()
@@ -287,8 +287,8 @@ to the "~/" aka $HOME directory. If you find this is not accurate information pl
         #gladefile="/usr/local/fluxStyle/images/main.glade"
         gladefile="./images/main.glade"
         if gtk.pygtk_version < (2,5,90):
-            message = """fluxStyle version 1.0 Updae your pygtk version for more features. Version
-2.6.0 or newer is reccomended"""
+            message = "fluxStyle version 1.0 Updae your pygtk version for more features. Version "
+			message += "2.6.0 or newer is reccomended"
             errorMessage.infoMessage(message)
         else:
             windowname2="aboutdialog1"
