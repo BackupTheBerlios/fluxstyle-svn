@@ -22,9 +22,9 @@ TODO
   
 """
 import sys
-#sys.path.append("/usr/local/fluxStyle/mods")
-sys.path.append("./mods")
-import os,findStyles,parseConfig
+#sys.path.append("./fluxstyle")
+import os
+from fluxstyle import findStyles,parseConfig
 from os.path import isfile,expanduser,isdir
 try:
     import gtk
@@ -51,7 +51,7 @@ and for best results get 2.6 or newer."""
     top.mainloop()
     raise SystemExit
 
-import errorMessage
+from fluxstyle import errorMessage
 try:
     import gtk.glade
 
@@ -84,7 +84,7 @@ class StyleChange:
     def __init__(self):
         """The main fluxStyle window will show"""
         global location
-        #gladefile="/usr/local/fluxStyle/images/main.glade"
+        #gladefile="/usr/share/fluxstyle-1.0/glade/main.glade"
         gladefile = "./images/main.glade"
         windowname = "window1"
         self.wTree = gtk.glade.XML (gladefile,windowname)
@@ -166,7 +166,7 @@ class StyleChange:
             if isfile(location+"/"+stylename+"/preview.jpg"):
                 image.set_from_file(location+"/" +stylename+"/preview.jpg")
             else:
-                #image.set_from_file( "/usr/local/fluxStyle/images/none.jpg")
+                #image.set_from_file( "/usr/share/fluxstyle-1.0/images/none.jpg")
                 image.set_from_file( "./images/none.jpg")
         return image.get_pixbuf()
     def __fill_view_menu__(self, widget):
@@ -284,7 +284,7 @@ class StyleChange:
     
     def __about1_activate__(self,widget):
         """Activate the help button with the about dialog, use generic if pygtk < 2.5.9"""
-        #gladefile="/usr/local/fluxStyle/images/main.glade"
+        #gladefile="/usr/share/fluxstyle-1.0/glade/main.glade"
         gladefile="./images/main.glade"
         if gtk.pygtk_version < (2,5,90):
             message = "fluxStyle version 1.0 Updae your pygtk version for more features. Version "
