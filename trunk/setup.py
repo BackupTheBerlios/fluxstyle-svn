@@ -16,7 +16,8 @@ setup(name='fluxstyle',
       url='http://fluxstyle.berlios.de/',
       packages=['fluxstyle'],
       data_files=[('/usr/share/fluxstyle-1.0/images',
-        ['images/fluxbox48x48-trans-metal-bevel.png','images/mini-fluxbox6.png','images/none.jpg']),
+        ['images/fluxmetal.png','images/mini-fluxbox6.png','images/none.jpg']),
         ('/usr/share/fluxstyle-1.0/glade',['images/main.glade']),
-        ('/usr/bin',['fluxStyle'])]
+        ('/usr/bin',['fluxStyle']),
+        ('/usr/share/fluxstyle-1.0/docs',['docs/README','docs/LICENSE','docs/Changelog'])]
       )
