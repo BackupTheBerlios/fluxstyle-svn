@@ -1,6 +1,10 @@
 (Format: Day.Month.Year)
 	Should have started this sooner cause I have nothing from
 	the start to Rev 39 :)
+Changes for Revision 51 (errr)
+	*removed shebang from __init__.py
+	*remove fluxStyle.py from module dir
+	*make 1.0.1 release
 
 Changes for Revision 50 (errr)
 	*added TODO list
