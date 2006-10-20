@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2005,2006 Michael Rice
 # errr@errr-online.com
 # vim:set noexpandtab:ts=4:sts=4 textwidth=79:
