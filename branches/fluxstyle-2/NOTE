@@ -1,0 +1,8 @@
+Make sure you work on the code in editor_stuff only
+
+the other is the main trunk and I dont want to make 
+changes to its source code, once the editor_stuff code works 
+then it will replace the main trunk
+
+thanks,
+  Michael
