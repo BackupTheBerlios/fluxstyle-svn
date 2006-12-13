@@ -5,7 +5,7 @@
 
 <widget class="GtkAboutDialog" id="aboutdialog1">
   <property name="visible">True</property>
-  <property name="destroy_with_parent">False</property>
+  <property name="destroy_with_parent">True</property>
   <property name="name" translatable="yes">fluxStyle</property>
   <property name="copyright" translatable="yes">© 2005 by: Michael Rice</property>
   <property name="comments" translatable="yes">To use place a file named 'preview.jpg' into each
@@ -41,6 +41,7 @@ his work was licensed under the
 creative commons license. </property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
   <property name="logo">mini-fluxbox6.png</property>
+  <signal name="response" handler="on_aboutdialog1_response" last_modification_time="Wed, 13 Dec 2006 05:10:46 GMT"/>
 </widget>
 
 <widget class="GtkWindow" id="window1">
@@ -206,11 +207,73 @@ creative commons license. </property>
 		  <property name="visible">True</property>
 		  <property name="can_default">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label">gtk-add</property>
-		  <property name="use_stock">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="on_add_style_clicked" last_modification_time="Mon, 12 Sep 2005 21:49:16 GMT"/>
+
+		  <child>
+		    <widget class="GtkAlignment" id="alignment1">
+		      <property name="visible">True</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xscale">0</property>
+		      <property name="yscale">0</property>
+		      <property name="top_padding">0</property>
+		      <property name="bottom_padding">0</property>
+		      <property name="left_padding">0</property>
+		      <property name="right_padding">0</property>
+
+		      <child>
+			<widget class="GtkHBox" id="hbox2">
+			  <property name="visible">True</property>
+			  <property name="homogeneous">False</property>
+			  <property name="spacing">2</property>
+
+			  <child>
+			    <widget class="GtkImage" id="image1">
+			      <property name="visible">True</property>
+			      <property name="stock">gtk-add</property>
+			      <property name="icon_size">4</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="label1">
+			      <property name="visible">True</property>
+			      <property name="label">Install Theme</property>
+			      <property name="use_underline">True</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">False</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+			      <property name="width_chars">-1</property>
+			      <property name="single_line_mode">False</property>
+			      <property name="angle">0</property>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
 		</widget>
 	      </child>
 
@@ -224,6 +287,81 @@ creative commons license. </property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="on_remove_style_clicked" last_modification_time="Mon, 12 Sep 2005 21:49:28 GMT"/>
+		</widget>
+	      </child>
+
+	      <child>
+		<widget class="GtkButton" id="add_theme_dir">
+		  <property name="visible">True</property>
+		  <property name="can_default">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="focus_on_click">True</property>
+		  <signal name="clicked" handler="on_add_theme_dir_clicked" last_modification_time="Tue, 31 Oct 2006 15:00:21 GMT"/>
+
+		  <child>
+		    <widget class="GtkAlignment" id="alignment2">
+		      <property name="visible">True</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xscale">0</property>
+		      <property name="yscale">0</property>
+		      <property name="top_padding">0</property>
+		      <property name="bottom_padding">0</property>
+		      <property name="left_padding">0</property>
+		      <property name="right_padding">0</property>
+
+		      <child>
+			<widget class="GtkHBox" id="hbox3">
+			  <property name="visible">True</property>
+			  <property name="homogeneous">False</property>
+			  <property name="spacing">2</property>
+
+			  <child>
+			    <widget class="GtkImage" id="image2">
+			      <property name="visible">True</property>
+			      <property name="stock">gtk-edit</property>
+			      <property name="icon_size">4</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+
+			  <child>
+			    <widget class="GtkLabel" id="label2">
+			      <property name="visible">True</property>
+			      <property name="label" translatable="yes">Add Theme Dir</property>
+			      <property name="use_underline">True</property>
+			      <property name="use_markup">False</property>
+			      <property name="justify">GTK_JUSTIFY_LEFT</property>
+			      <property name="wrap">False</property>
+			      <property name="selectable">False</property>
+			      <property name="xalign">0.5</property>
+			      <property name="yalign">0.5</property>
+			      <property name="xpad">0</property>
+			      <property name="ypad">0</property>
+			      <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+			      <property name="width_chars">-1</property>
+			      <property name="single_line_mode">False</property>
+			      <property name="angle">0</property>
+			    </widget>
+			    <packing>
+			      <property name="padding">0</property>
+			      <property name="expand">False</property>
+			      <property name="fill">False</property>
+			    </packing>
+			  </child>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
 		</widget>
 	      </child>
 	    </widget>

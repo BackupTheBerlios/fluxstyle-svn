@@ -28,7 +28,8 @@ def write_config():
 # to choose the name that will display in the view menu use the following syntax
 # Name,/location:Foo,/other/location:Bar,/another/location
 # If the name identifier is left off "Extra Styles" will be used.
-#STYLES_DIRS:Global,/usr/local/share/fluxbox/styles:Commonbox,/usr/share/commonbox/styles
+# The following line is an example of what to use if you have styles installed in these places
+#STYLES_DIRS:Global,/usr/share/fluxbox/styles:Tenners,/usr/share/tenr-de-styles-pkg-1.0/styles/
 """
     file = expanduser("~/.fluxStyle.rc")
     file = open(file, "w")

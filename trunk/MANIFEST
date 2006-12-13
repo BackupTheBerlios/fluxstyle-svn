@@ -1,5 +1,5 @@
 setup.py
-bin/fluxStyle
+fluxStyle
 images/fluxmetal.png
 images/mini-fluxbox6.png
 images/none.jpg

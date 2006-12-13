@@ -17,63 +17,19 @@ TODO
   like folders that dont have anything to do with a style.
 - fix any bugs that may still be there and unseen..
 - add tray icon support (this is started will be done soon)
-- convert install script to python. This will allow checking for
-  libs so it doesnt have to be done in the main app.
-  
 """
 import sys
-#sys.path.append("./fluxstyle")
 import os
+import gtk
+import gtk.glade
 from fluxstyle import findStyles,parseConfig
 from os.path import isfile,expanduser,isdir
-try:
-    import gtk
-
-except:
-    #gtk is missing but tkinter is part of standard 
-    #python modules so give an error using it about what 
-    #the user is missing.
-    from Tkinter import *
-    # set up the window itself
-    top = Tk()
-    message = Frame(top)
-    message.master.title("fluxStlye Error")
-    message.pack()
-    error = """You do not have pyGTK installed\n\
-please vist http://pygtk.org/ and install\nat least 2.4, \
-and for best results get 2.6 or newer."""
-    # add the widgets
-    lMessage = Label(message, text = error)
-    lMessage.pack()
-    qButton = Button(message, text = "OK", command = message.quit)
-    qButton.pack()
-    # set the loop running
-    top.mainloop()
-    raise SystemExit
-
 from fluxstyle import errorMessage
-try:
-    import gtk.glade
 
-except:
-    #we have gtk so give a gui message as to why this app will not work.
-    #maybe we need to offer to open the browser to
-    #http://ftp.gnome.org/pub/GNOME/sources/libglade/2.0/ 
-    ver = sys.version[:5]
-    message = "You need to install libglade2 http://ftp.gnome.org/pub/GNOME/sources"
-	message += "/libglade/2.0/ or set your PYTHONPATH correctly. try: export "
-	message += "PYTHONPATH=/usr/local/lib/python%s/site-packages/ or export " %(ver)
-	message += "PYTHONPATH=/usr/lib/python%s/site-packages/" % (ver)
-    errorMessage.infoMessage(message)
-    raise SystemExit
-
-if gtk.pygtk_version < (2,3,90):
-    #we do have gtk so lets tell them via gui that they need to update pygtk
-    #maybe we should add a 'would you like to open a browser to pygtk.org ??
-    message = "PyGtk 2.3.90 or later required for this program it is reccomended "
-	message += "that you get pygtk 2.6 or newer for best results."
-    errorMessage.infoMessage(message)
-    raise SystemExit
+#GLADEFILE="/usr/share/fluxstyle/glade/main.glade"
+#N_IMAGE="/usr/share/fluxstyle/images/none.jpg"
+GLADEFILE="./glade/main.glade"
+N_IMAGE="./images/none.jpg"
 
 class StyleChange:
     """Class wrapper for changing styles in fluxbox"""
@@ -84,10 +40,8 @@ class StyleChange:
     def __init__(self):
         """The main fluxStyle window will show"""
         global location
-        #gladefile="/usr/share/fluxstyle-1.0/glade/main.glade"
-        gladefile = "./images/main.glade"
         windowname = "window1"
-        self.wTree = gtk.glade.XML (gladefile,windowname)
+        self.wTree = gtk.glade.XML (GLADEFILE,windowname)
         self.treeview1 = self.wTree.get_widget("treeview1")
         self.view_menu = self.wTree.get_widget("view1_menu")
         self.__fill_view_menu__(self.view_menu)
@@ -166,8 +120,7 @@ class StyleChange:
             if isfile(location+"/"+stylename+"/preview.jpg"):
                 image.set_from_file(location+"/" +stylename+"/preview.jpg")
             else:
-                #image.set_from_file( "/usr/share/fluxstyle-1.0/images/none.jpg")
-                image.set_from_file( "./images/none.jpg")
+                image.set_from_file(N_IMAGE)
         return image.get_pixbuf()
     def __fill_view_menu__(self, widget):
         v_menuNam = None
@@ -281,18 +234,25 @@ class StyleChange:
             return model.get_value(iter, 1)
         else:
             return False
+	
+	def __close_about__(self,widget,event):
+	    """close about dialog"""
+		if event == gtk.RESPONSE_CANCEL:
+			self.aboutdialog.destroy()
     
     def __about1_activate__(self,widget):
         """Activate the help button with the about dialog, use generic if pygtk < 2.5.9"""
-        #gladefile="/usr/share/fluxstyle-1.0/glade/main.glade"
-        gladefile="./images/main.glade"
         if gtk.pygtk_version < (2,5,90):
             message = "fluxStyle version 1.0 Updae your pygtk version for more features. Version "
 			message += "2.6.0 or newer is reccomended"
             errorMessage.infoMessage(message)
         else:
             windowname2="aboutdialog1"
-            self.wTree2=gtk.glade.XML (gladefile,windowname2)
+			self.wTree2=gtk.glade.XML (GLADEFILE,windowname2)
+			handler = { "on_aboutdialog1_response":self.__close_about__}
+			self.wTree2.signal_autoconnect(handler)
+			self.aboutdialog = self.wTree2.get_widget("aboutdialog1")
+
 if __name__ == "__main__":
     style = StyleChange()
     style.main()

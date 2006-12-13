@@ -1,6 +1,13 @@
 (Format: Day.Month.Year)
 	Should have started this sooner cause I have nothing from
 	the start to Rev 39 :)
+12.12.2006 (errr)
+	*Fix about dialog close for new pygtk
+
+Changes for 1.2 (errr)
+	*Remove tkinter stuff
+	*move lib check into setup.py
+
 Changes for Revision 51 (errr)
 	*removed shebang from __init__.py
 	*remove fluxStyle.py from module dir
